@@ -1,4 +1,4 @@
-package Doggie.WebPage.Mundial;
+package Doggie.WebPage.Mundial.modelo.entidad;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,6 @@ public class Sustitucion {
     @Getter
     @Setter
     @EqualsAndHashCode
-
     static class SustitucionPK implements Serializable {
 
         @Column(name = "jugadorSalienteId")

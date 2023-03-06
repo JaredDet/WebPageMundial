@@ -1,5 +1,6 @@
-package Doggie.WebPage.Mundial;
+package Doggie.WebPage.Mundial.modelo.entidad;
 
+import Doggie.WebPage.Mundial.modelo.Color;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

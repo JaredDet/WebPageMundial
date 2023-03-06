@@ -1,4 +1,4 @@
-package Doggie.WebPage.Mundial;
+package Doggie.WebPage.Mundial.modelo.entidad;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class Estadistica {
     private Long estadisticaId;
 
     @ManyToOne
-    private Grupo grupo;
+    private Equipo equipo;
 
     @OneToMany(mappedBy = "golId")
     private List<Gol> goles;

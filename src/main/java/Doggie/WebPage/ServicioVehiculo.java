@@ -36,4 +36,3 @@ public class ServicioVehiculo {
         return vehiculoMapper.toVehiculosPublicacion(repositorioVehiculo.findByTipoVehiculoAndMarcaAndModelo(tipoVehiculo, marca, modelo));
     }
 }
-

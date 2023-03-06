@@ -1,4 +1,4 @@
-package Doggie.WebPage.Mundial;
+package Doggie.WebPage.Mundial.modelo;
 
 public enum Color {
 

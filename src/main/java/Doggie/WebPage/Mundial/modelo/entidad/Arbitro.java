@@ -1,4 +1,4 @@
-package Doggie.WebPage.Mundial;
+package Doggie.WebPage.Mundial.modelo.entidad;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,12 +7,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "fase")
+@Table(name = "arbitro")
 @Getter
 @Setter
-public class Fase {
+public class Arbitro {
 
     @Id
-    private Long faseId;
+    private Long arbitroId;
     private String nombre;
 }

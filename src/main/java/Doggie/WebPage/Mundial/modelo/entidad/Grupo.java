@@ -1,9 +1,6 @@
-package Doggie.WebPage.Mundial;
+package Doggie.WebPage.Mundial.modelo.entidad;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +14,7 @@ public class Grupo {
 
     @Id
     private Long grupoId;
+    @Column(unique = true)
     private String nombre;
     @OneToMany(mappedBy = "equipoId")
     private List<Equipo> equipos;

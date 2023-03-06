@@ -1,4 +1,4 @@
-package Doggie.WebPage.Mundial;
+package Doggie.WebPage.Mundial.modelo.entidad;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -18,7 +18,7 @@ public class JugadorEnCancha {
     @Getter
     @Setter
     @EqualsAndHashCode
-    public static class JugadorEnCanchaPK implements Serializable {
+    static class JugadorEnCanchaPK implements Serializable {
 
         @Column(name = "jugadorId")
         Long jugadorId;
