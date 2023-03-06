@@ -4,7 +4,9 @@ import Doggie.WebPage.Mundial.dto.EquipoTitular;
 import Doggie.WebPage.Mundial.dto.mapper.EquipoTitularMapper;
 import Doggie.WebPage.Mundial.modelo.entidad.Equipo;
 import Doggie.WebPage.Mundial.modelo.repositorio.EquipoRepositorio;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,13 +14,10 @@ import org.springframework.stereotype.Service;
 public class EquipoServicio {
 
     private final EquipoRepositorio equipoRepositorio;
-    private final JugadorServicio jugadorServicio;
     private final EquipoTitularMapper equipoTitularMapper;
 
     public Equipo findEquipo(String nombreEquipo) {
-        var equipo = equipoRepositorio.findByNombre(nombreEquipo);
-        equipo.setJugadores(jugadorServicio.findJugadorTitularByEquipo(equipo));
-        return equipo;
+        return equipoRepositorio.findByNombre(nombreEquipo);
     }
 
     public EquipoTitular findEquipoTitular(String nombreEquipo) {

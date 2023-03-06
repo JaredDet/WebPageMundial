@@ -8,8 +8,6 @@ import Doggie.WebPage.Mundial.modelo.repositorio.JugadorRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class JugadorServicio {
@@ -24,9 +22,5 @@ public class JugadorServicio {
     public JugadorTitular findJugadorTitularByNombre(String nombre) {
         var jugador = findJugadorByNombre(nombre);
         return jugadorTitularMapper.toJugadorTitular(jugador);
-    }
-
-    public List<Jugador> findJugadorTitularByEquipo(Equipo equipo) {
-        return jugadorRepositorio.findByEquipo(equipo);
     }
 }

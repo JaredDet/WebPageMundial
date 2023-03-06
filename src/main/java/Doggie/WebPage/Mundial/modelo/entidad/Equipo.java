@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -25,9 +26,8 @@ public class Equipo {
     private Fase faseActual;
     @ManyToOne
     private Grupo grupo;
-    @OneToMany(mappedBy = "jugadorId")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "equipo", fetch = FetchType.EAGER)
     private List<Jugador> jugadores;
-    @OneToMany(mappedBy = "estadisticaId")
+    @OneToMany(mappedBy = "equipo", fetch = FetchType.EAGER)
     private List<Estadistica> estadisticas;
 }

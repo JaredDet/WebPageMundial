@@ -16,6 +16,6 @@ public class Grupo {
     private Long grupoId;
     @Column(unique = true)
     private String nombre;
-    @OneToMany(mappedBy = "equipoId")
+    @OneToMany(mappedBy = "grupo")
     private List<Equipo> equipos;
 }

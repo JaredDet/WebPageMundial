@@ -18,7 +18,7 @@ public class Estadistica {
     @ManyToOne
     private Equipo equipo;
 
-    @OneToMany(mappedBy = "golId")
+    @OneToMany(mappedBy = "estadistica")
     private List<Gol> goles;
 
     private int remates;
@@ -28,10 +28,10 @@ public class Estadistica {
     private int presicionPases;
     private int faltas;
 
-    @OneToMany(mappedBy = "tarjetaId")
+    @OneToMany(mappedBy = "estadistica")
     private List<Tarjeta> tarjetasAmarillas;
 
-    @OneToMany(mappedBy = "tarjetaId")
+    @OneToMany(mappedBy = "estadistica")
     private List<Tarjeta> tarjetasRojas;
 
     private int posicionAdelantada;
