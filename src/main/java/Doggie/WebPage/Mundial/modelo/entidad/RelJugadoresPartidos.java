@@ -6,19 +6,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.Period;
 import java.util.List;
 
 @Entity
 @Table(name = "jugadorEnCancha")
 @Getter
 @Setter
-public class JugadorEnCancha {
+public class RelJugadoresPartidos {
 
     @Embeddable
     @Getter
     @Setter
     @EqualsAndHashCode
-    static class JugadorEnCanchaPK implements Serializable {
+    static class RelJugadoresPartidosPK implements Serializable {
 
         @Column(name = "jugadorId")
         Long jugadorId;
@@ -28,9 +29,9 @@ public class JugadorEnCancha {
     }
 
     @EmbeddedId
-    private JugadorEnCanchaPK jugadorEnCanchaPK;
+    private RelJugadoresPartidosPK relJugadoresPartidosPK;
 
-    @OneToOne
+    @ManyToOne
     @MapsId("jugadorId")
     private Jugador jugador;
 
@@ -41,9 +42,10 @@ public class JugadorEnCancha {
     @OneToOne
     private Posicion posicionActual;
 
-    @OneToMany(mappedBy = "autor")
-    private List<Gol> goles;
-
     @OneToMany(mappedBy = "amonestado")
     private List<Tarjeta> tarjetas;
+
+    public int getEdadPartido() {
+        return Period.between(jugador.getFechaNacimiento(), partido.getFecha()).getYears();
+    }
 }

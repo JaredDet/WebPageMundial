@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+
 @Entity
 @Table(name = "jugador")
 @Getter
@@ -19,9 +23,18 @@ public class Jugador {
     private Equipo equipo;
     @OneToOne
     private Posicion posicionTitular;
+
+    @OneToMany(mappedBy = "jugador")
+    private List<RelJugadoresPartidos> juegosJugados;
+
     private int dorsal;
     @Column(unique = true)
     private String nombre;
-    private int edad;
+    private LocalDate fechaNacimiento;
+    private String foto;
+
+    public int getEdad() {
+        return Period.between(fechaNacimiento, LocalDate.now()).getYears();
+    }
 }
 

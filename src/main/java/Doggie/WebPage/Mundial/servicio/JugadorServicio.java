@@ -2,7 +2,6 @@ package Doggie.WebPage.Mundial.servicio;
 
 import Doggie.WebPage.Mundial.dto.JugadorTitular;
 import Doggie.WebPage.Mundial.dto.mapper.JugadorTitularMapper;
-import Doggie.WebPage.Mundial.modelo.entidad.Equipo;
 import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
 import Doggie.WebPage.Mundial.modelo.repositorio.JugadorRepositorio;
 import lombok.RequiredArgsConstructor;
