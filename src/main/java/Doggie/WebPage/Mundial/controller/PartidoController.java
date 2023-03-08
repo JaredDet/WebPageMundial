@@ -30,7 +30,7 @@ public class PartidoController {
     }
 
     @GetMapping("/partidos/equipos")
-    public List<PartidoResultados> partidos(@RequestParam String nombre) {
+    public List<PartidoResultados> partidos(@RequestParam(required = false) String nombre) {
         return partidoServicio.findByNombreEquipo(nombre);
     }
 }

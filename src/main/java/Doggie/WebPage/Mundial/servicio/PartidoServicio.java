@@ -38,6 +38,10 @@ public class PartidoServicio {
     }
 
     public List<PartidoResultados> findByNombreEquipo(String nombreEquipo) {
+
+        if (nombreEquipo == null) {
+            return partidoRepositorio.findAll().stream().map(partidoResultadosMapper::toPartidoResultados).toList();
+        }
         var equipo = equipoServicio.findEquipo(nombreEquipo);
         var partidos = partidoRepositorio.findByEquipo(equipo.getEquipoId());
         return partidos.stream().map(partidoResultadosMapper::toPartidoResultados).toList();
