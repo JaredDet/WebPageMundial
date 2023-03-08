@@ -19,6 +19,9 @@ public class Estadistica {
     private Long estadisticaId;
 
     private Integer goles;
+    private Integer golesEnContra;
+    private Integer puntosResultados;
+
     private Integer remates;
     private Integer rematesAlArco;
     private Integer posesion;
