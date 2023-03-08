@@ -1,6 +1,7 @@
 package Doggie.WebPage.Mundial.controller;
 
 import Doggie.WebPage.Mundial.dto.EquipoTablaFaseGrupos;
+import Doggie.WebPage.Mundial.dto.PartidoResultados;
 import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import Doggie.WebPage.Mundial.servicio.PartidoServicio;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,10 @@ public class PartidoController {
     @GetMapping("/tabla_equipos")
     public List<EquipoTablaFaseGrupos> equiposPartidos(@RequestParam String nombreFase, @RequestParam(required = false) String nombreGrupo) {
         return partidoServicio.findEquipos(nombreFase, nombreGrupo);
+    }
+
+    @GetMapping("/partidos/equipos")
+    public List<PartidoResultados> partidos(@RequestParam String nombre) {
+        return partidoServicio.findByNombreEquipo(nombre);
     }
 }

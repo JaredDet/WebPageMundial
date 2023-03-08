@@ -1,7 +1,9 @@
 package Doggie.WebPage.Mundial.servicio;
 
 import Doggie.WebPage.Mundial.dto.EquipoTablaFaseGrupos;
+import Doggie.WebPage.Mundial.dto.PartidoResultados;
 import Doggie.WebPage.Mundial.dto.mapper.EquipoTablaFaseGruposMapper;
+import Doggie.WebPage.Mundial.dto.mapper.PartidoResultadosMapper;
 import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import Doggie.WebPage.Mundial.modelo.repositorio.PartidoRepositorio;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,10 @@ public class PartidoServicio {
 
     private final EquipoTablaFaseGruposMapper equipoTablaFaseGruposMapper;
 
+    private final EquipoServicio equipoServicio;
+
+    private final PartidoResultadosMapper partidoResultadosMapper;
+
     public List<Partido> findByNombreFaseAndNombreGrupo(String nombreFase, String nombreGrupo) {
         var fase = faseServicio.findByNombre(nombreFase);
         var grupo = grupoServicio.findGrupo(nombreGrupo);
@@ -29,6 +35,12 @@ public class PartidoServicio {
             return partidoRepositorio.findByFase(fase);
         }
         return partidoRepositorio.findByFaseAndGrupo(fase.getFaseId(), grupo.getGrupoId());
+    }
+
+    public List<PartidoResultados> findByNombreEquipo(String nombreEquipo) {
+        var equipo = equipoServicio.findEquipo(nombreEquipo);
+        var partidos = partidoRepositorio.findByEquipo(equipo.getEquipoId());
+        return partidos.stream().map(partidoResultadosMapper::toPartidoResultados).toList();
     }
 
     public List<EquipoTablaFaseGrupos> findEquipos(String nombreFase, String nombreGrupo) {
@@ -61,9 +73,9 @@ public class PartidoServicio {
                 golesEnContra += replica.golesEnContra();
                 puntos += replica.puntos();
 
-                if(goles > golesEnContra) {
+                if (goles > golesEnContra) {
                     ganados++;
-                } else if(goles < golesEnContra) {
+                } else if (goles < golesEnContra) {
                     perdidos++;
                 } else {
                     empates++;
