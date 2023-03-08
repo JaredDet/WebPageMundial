@@ -7,10 +7,7 @@ import Doggie.WebPage.Mundial.modelo.repositorio.PartidoRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,6 +72,8 @@ public class PartidoServicio {
 
             equipos.add(new EquipoTablaFaseGrupos(equipo.getKey(), equipo.getValue().size(), ganados, empates, perdidos, goles, golesEnContra, goles - golesEnContra, puntos));
         }
+        Collections.sort(equipos);
+        System.out.println(equipos);
         return equipos;
     }
 }
