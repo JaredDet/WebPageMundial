@@ -20,8 +20,6 @@ public class GrupoController {
     @SneakyThrows
     @GetMapping("/grupo")
     public Grupo grupo(@RequestParam String nombre) {
-        var grupo = grupoServicio.findGrupo(nombre);
-        System.out.println(new ObjectMapper().writeValueAsString(grupo));
-        return grupo;
+        return grupoServicio.findGrupo(nombre);
     }
 }

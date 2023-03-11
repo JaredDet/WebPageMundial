@@ -1,5 +1,6 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
+import Doggie.WebPage.Mundial.modelo.EstadoJugador;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,34 +11,34 @@ import java.time.Period;
 import java.util.List;
 
 @Entity
-@Table(name = "jugadorEnCancha")
+@Table(name = "jugadorEnPartido")
 @Getter
 @Setter
-public class RelJugadoresPartidos {
+public class JugadorEnPartido {
 
     @Embeddable
     @Getter
     @Setter
     @EqualsAndHashCode
-    static class RelJugadoresPartidosPK implements Serializable {
+    public static class JugadorEnPartidoPK implements Serializable {
 
         @Column(name = "jugadorId")
         Long jugadorId;
 
-        @Column(name = "partidoId")
-        Long partidoId;
+        @Column(name = "equipoEnPartidoPK")
+        EquipoEnPartido.EquipoEnPartidoPK equipoEnPartidoPK;
     }
 
     @EmbeddedId
-    private RelJugadoresPartidosPK relJugadoresPartidosPK;
+    private JugadorEnPartidoPK jugadorEnPartidoPK;
 
     @ManyToOne
     @MapsId("jugadorId")
     private Jugador jugador;
 
     @ManyToOne
-    @MapsId("partidoId")
-    private Partido partido;
+    @MapsId("equipoEnPartidoPK")
+    private EquipoEnPartido equipo;
 
     @OneToOne
     private Posicion posicionActual;
@@ -45,7 +46,10 @@ public class RelJugadoresPartidos {
     @OneToMany(mappedBy = "amonestado")
     private List<Tarjeta> tarjetas;
 
+    @Enumerated(EnumType.STRING)
+    private EstadoJugador estadoJugador;
+
     public int getEdadPartido() {
-        return Period.between(jugador.getFechaNacimiento(), partido.getFecha()).getYears();
+        return Period.between(jugador.getFechaNacimiento(), equipo.getPartido().getFecha()).getYears();
     }
 }

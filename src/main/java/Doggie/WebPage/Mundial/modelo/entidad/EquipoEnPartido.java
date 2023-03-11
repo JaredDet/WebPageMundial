@@ -8,18 +8,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
-@Table(name = "relPartidosEquipos")
+@Table(name = "equipoEnPartido")
 @Getter
 @Setter
-public class RelPartidosEquipos {
+public class EquipoEnPartido {
 
     @Embeddable
     @Getter
     @Setter
     @EqualsAndHashCode
-    static class RelPartidosEquiposPK implements Serializable {
+    public static class EquipoEnPartidoPK implements Serializable {
 
         @Column(name = "partidoId")
         Long partidoId;
@@ -29,7 +30,7 @@ public class RelPartidosEquipos {
     }
 
     @EmbeddedId
-    private RelPartidosEquiposPK relPartidosEquiposPK;
+    private EquipoEnPartidoPK equipoEnPartidoPK;
 
     @ManyToOne
     @MapsId("partidoId")
@@ -41,6 +42,12 @@ public class RelPartidosEquipos {
     @JsonManagedReference
     private Equipo equipo;
 
+    @OneToMany(mappedBy = "equipo")
+    private List<JugadorEnPartido> jugadores;
+
     @OneToOne
     private Estadistica estadistica;
+
+    @OneToOne
+    private Formacion formacion;
 }

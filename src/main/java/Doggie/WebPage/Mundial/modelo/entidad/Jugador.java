@@ -25,7 +25,7 @@ public class Jugador {
     private Posicion posicionTitular;
 
     @OneToMany(mappedBy = "jugador")
-    private List<RelJugadoresPartidos> juegosJugados;
+    private List<JugadorEnPartido> juegosJugados;
 
     private int dorsal;
     @Column(unique = true)

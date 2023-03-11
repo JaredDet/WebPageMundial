@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface PartidoResultadosMapper {
 
     @Mapping(target = "fase", source = "fase.nombre")
-    @Mapping(target = "equipos", source = "relPartidosEquipos")
+    @Mapping(target = "equipos", source = "equipos")
     PartidoResultados toPartidoResultados(Partido partido);
 }

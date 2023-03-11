@@ -18,7 +18,7 @@ public class Tarjeta {
     private Estadistica estadistica;
 
     @ManyToOne
-    private RelJugadoresPartidos amonestado;
+    private JugadorEnPartido amonestado;
 
     private int minuto;
 

@@ -27,10 +27,7 @@ public class Partido {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "partido", fetch = FetchType.EAGER)
-    private List<RelPartidosEquipos> relPartidosEquipos;
-
-    @OneToMany(mappedBy = "partido")
-    private List<RelJugadoresPartidos> relJugadoresPartidos;
+    private List<EquipoEnPartido> equipos;
 
     @OneToMany(mappedBy = "partido")
     private List<Sustitucion> sustituciones;

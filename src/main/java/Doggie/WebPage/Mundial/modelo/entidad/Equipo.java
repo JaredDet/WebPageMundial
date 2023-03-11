@@ -17,21 +17,27 @@ public class Equipo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long equipoId;
+
     @Column(unique = true)
     private String nombre;
+
     @Column(unique = true)
     private String codigoFIFA;
+
     @Column(unique = true)
     private String bandera;
-    @OneToOne
-    private Fase faseActual;
+
     @ManyToOne
     @JsonManagedReference
     private Grupo grupo;
+
     @OneToMany(mappedBy = "equipo", fetch = FetchType.EAGER)
     private List<Jugador> jugadores;
 
     @JsonBackReference
     @OneToMany(mappedBy = "equipo", fetch = FetchType.EAGER)
-    private List<RelPartidosEquipos> relPartidosEquipos;
+    private List<EquipoEnPartido> juegosJugados;
+
+    @OneToOne
+    private DirectorTecnico directorTecnico;
 }
