@@ -6,22 +6,23 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "sustituciones")
+@Table(name = "participantes")
 @Getter
 @Setter
 @ToString
-public class Sustitucion {
+public class Participante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "sustitucionId")
-    private Long sustitucionId;
+    @Column(name = "participanteId")
+    private Long participanteId;
 
     @ManyToOne
     private Partido partido;
-    @OneToOne
-    private Jugador saliente;
-    @OneToOne
-    private Jugador entrante;
-    private int minuto;
+
+    @ManyToOne
+    private Equipo equipo;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean esLocal;
 }

@@ -1,43 +1,31 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Entity
-@Table(name = "equipo")
+@Table(name = "equipos")
 @Getter
 @Setter
+@ToString
 public class Equipo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "equipoId")
     private Long equipoId;
-
-    @Column(unique = true)
     private String nombre;
 
-    @Column(unique = true)
-    private String codigoFIFA;
-
-    @Column(unique = true)
-    private String bandera;
-
-    @ManyToOne
-    @JsonManagedReference
-    private Grupo grupo;
-
-    @OneToMany(mappedBy = "equipo", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "equipo")
     private List<Jugador> jugadores;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "equipo", fetch = FetchType.EAGER)
-    private List<EquipoEnPartido> juegosJugados;
+    @OneToMany(mappedBy = "equipo")
+    private List<Participante> partidosParticipados;
 
     @OneToOne
-    private DirectorTecnico directorTecnico;
+    private Tecnico tecnico;
 }

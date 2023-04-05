@@ -1,40 +1,33 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "partido")
+@Table(name = "partidos")
 @Getter
 @Setter
+@ToString
 public class Partido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "partidoId")
     private Long partidoId;
 
-    private LocalDate fecha;
+    @OneToMany(mappedBy = "partido")
+    private List<Participante> equiposParticipantes;
 
-    private Integer duracion;
+    @OneToMany(mappedBy = "partido")
+    private List<Convocado> convocados;
 
-    @OneToOne
-    private Fase fase;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "partido", fetch = FetchType.EAGER)
-    private List<EquipoEnPartido> equipos;
+    @OneToMany(mappedBy = "partido")
+    private List<Gol> goles;
 
     @OneToMany(mappedBy = "partido")
     private List<Sustitucion> sustituciones;
-
-    @OneToOne
-    private Estadio estadio;
-
-    @OneToOne
-    private Arbitro arbitro;
 }
