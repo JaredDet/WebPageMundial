@@ -1,6 +1,6 @@
 package Doggie.WebPage.Mundial.dto.mapper;
 
-import Doggie.WebPage.Mundial.dto.EquipoGoles;
+import Doggie.WebPage.Mundial.dto.GolesEquipo;
 import Doggie.WebPage.Mundial.dto.Marcador;
 import org.mapstruct.Mapper;
 
@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 
 public interface MarcadorMapper {
 
-    default Marcador from(EquipoGoles local, EquipoGoles visita) {
+    default Marcador from(GolesEquipo local, GolesEquipo visita) {
         var golesLocal = local.goles().size();
         var golesVisita = visita.goles().size();
         return new Marcador(golesLocal, golesVisita);

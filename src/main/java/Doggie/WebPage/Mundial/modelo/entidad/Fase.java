@@ -5,20 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Entity
-@Table(name = "tecnicos")
+@Table(name = "fases")
 @Getter
 @Setter
 @ToString
-public class Tecnico {
+public class Fase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tecnicoId")
-    private Long tecnicoId;
-
+    @Column(name = "faseId")
+    private Long faseId;
     private String nombre;
 
-    @ManyToOne
-    private Pais pais;
+    @OneToMany(mappedBy = "fase")
+    private List<Partido> partidos;
 }

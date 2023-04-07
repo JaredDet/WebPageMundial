@@ -6,19 +6,15 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "tecnicos")
+@Table(name = "estadios")
 @Getter
 @Setter
 @ToString
-public class Tecnico {
+public class Estadio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tecnicoId")
-    private Long tecnicoId;
-
+    @Column(name = "estadioId")
+    private Long estadioId;
     private String nombre;
-
-    @ManyToOne
-    private Pais pais;
 }

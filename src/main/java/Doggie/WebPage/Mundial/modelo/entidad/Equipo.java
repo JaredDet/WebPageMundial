@@ -18,7 +18,6 @@ public class Equipo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "equipoId")
     private Long equipoId;
-    private String nombre;
 
     @OneToMany(mappedBy = "equipo")
     private List<Jugador> jugadores;
@@ -28,4 +27,7 @@ public class Equipo {
 
     @OneToOne
     private Tecnico tecnico;
+
+    @OneToOne
+    private Pais pais;
 }

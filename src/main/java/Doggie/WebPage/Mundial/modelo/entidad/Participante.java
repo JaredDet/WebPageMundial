@@ -25,4 +25,7 @@ public class Participante {
 
     @Column(columnDefinition = "boolean default false")
     private boolean esLocal;
+
+    @OneToOne
+    private Estadistica estadisticas;
 }

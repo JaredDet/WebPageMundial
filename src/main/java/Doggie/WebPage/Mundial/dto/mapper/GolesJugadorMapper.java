@@ -1,6 +1,6 @@
 package Doggie.WebPage.Mundial.dto.mapper;
 
-import Doggie.WebPage.Mundial.dto.JugadorGoles;
+import Doggie.WebPage.Mundial.dto.GolesJugador;
 import Doggie.WebPage.Mundial.modelo.entidad.Gol;
 import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
 import org.mapstruct.Mapper;
@@ -11,10 +11,10 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 
-public interface JugadorGolesMapper {
+public interface GolesJugadorMapper {
 
     @Mapping(target = "minutos", source = "goles", qualifiedByName = "minutosGoles")
-    JugadorGoles from(Jugador jugador);
+    GolesJugador from(Jugador jugador);
 
     @Named("minutosGoles")
     default List<Integer> minutosGoles(List<Gol> goles) {

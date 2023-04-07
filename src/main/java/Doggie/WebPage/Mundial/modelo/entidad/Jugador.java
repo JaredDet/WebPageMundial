@@ -26,5 +26,14 @@ public class Jugador {
 
     @OneToMany(mappedBy = "jugador")
     private List<Gol> goles;
+
+    @OneToMany(mappedBy = "jugador")
+    private List<Tarjeta> tarjetas;
+
+    @OneToMany(mappedBy = "jugador")
+    private List<Convocado> convocaciones;
+
+    @OneToMany(mappedBy = "jugador")
+    private List<Cambio> historialSustituciones;
 }
 
