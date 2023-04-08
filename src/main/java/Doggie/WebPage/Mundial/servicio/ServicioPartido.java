@@ -43,7 +43,7 @@ public class ServicioPartido {
         return findGolesByPartido(partido);
     }
 
-    public Marcador findMarcadorByPartido(Long partidoId) {
+    public List<MarcadorEquipo> findMarcadorByPartido(Long partidoId) {
         var partido = repositorioPartido.findById(partidoId).get();
         return findMarcadorByPartido(partido);
     }
@@ -69,9 +69,9 @@ public class ServicioPartido {
         return List.of(equipoLocal, equipoVisita);
     }
 
-    private Marcador findMarcadorByPartido(Partido partido) {
+    private List<MarcadorEquipo> findMarcadorByPartido(Partido partido) {
         var equipos = findGolesByPartido(partido);
-        return marcadorMapper.from(equipos.get(0), equipos.get(1));
+        return marcadorMapper.from(partido);
     }
 
     public List<DatosEstadistica> findDatosEstadisticasByPartido(Partido partido) {

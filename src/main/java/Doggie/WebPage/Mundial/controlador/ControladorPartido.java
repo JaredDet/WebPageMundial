@@ -30,7 +30,7 @@ public class ControladorPartido {
     }
 
     @GetMapping("/{partidoId}/marcador")
-    public Marcador marcador(@PathVariable Long partidoId) {
+    public List<MarcadorEquipo> marcador(@PathVariable Long partidoId) {
         return servicioPartido.findMarcadorByPartido(partidoId);
     }
 

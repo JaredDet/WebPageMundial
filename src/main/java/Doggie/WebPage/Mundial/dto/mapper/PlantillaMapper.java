@@ -9,6 +9,8 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
+import static java.util.Collections.sort;
+
 @Mapper(componentModel = "spring")
 public interface PlantillaMapper {
 
@@ -19,6 +21,8 @@ public interface PlantillaMapper {
         var participante = equipo.getPartidosParticipados().get(0);
 
         var jugadores = jugadorEnfrentamientoMapper.from(equipo.getJugadores());
+
+        sort(jugadores);
 
         var titulares = jugadores.stream().filter(JugadorEnfrentamiento::esTitular).toList();
         var plantillaTitular = from(titulares);

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface DatosPartidoMapper {
 
-    default DatosPartido from(List<Plantilla> plantillas, Marcador marcador, List<GolesEquipo> equiposGoles, Partido partido, List<DatosEstadistica> estadisticas) {
+    default DatosPartido from(List<Plantilla> plantillas, List<MarcadorEquipo> marcador, List<GolesEquipo> equiposGoles, Partido partido, List<DatosEstadistica> estadisticas) {
 
         var fecha = partido.getFecha();
         var hora = partido.getHora();
