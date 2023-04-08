@@ -30,4 +30,19 @@ public class Equipo {
 
     @OneToOne
     private Pais pais;
+
+    @ManyToOne
+    private Grupo grupo;
+
+    public boolean gana(Partido partido) {
+        return partido.golesEquipo(this) > partido.golesRival(this);
+    }
+
+    public boolean pierde(Partido partido) {
+        return partido.golesEquipo(this) < partido.golesRival(this);
+    }
+
+    public boolean empata(Partido partido) {
+        return partido.golesEquipo(this) == partido.golesRival(this);
+    }
 }

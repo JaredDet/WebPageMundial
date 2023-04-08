@@ -47,4 +47,25 @@ public class Partido {
 
     @ManyToOne
     private Fase fase;
+
+    public int golesEquipo(Equipo equipo) {
+
+        var listaGoles = goles.stream()
+                .filter(gol -> gol.getJugador().getEquipo().equals(equipo))
+                .toList();
+
+        return listaGoles.size();
+    }
+
+    public int golesRival(Equipo equipo) {
+        var rival = getRival(equipo);
+        return golesEquipo(rival);
+    }
+
+    private Equipo getRival(Equipo equipo) {
+        return equiposParticipantes.stream()
+                .filter(participante -> participante.getEquipo() != equipo)
+                .findFirst().get()
+                .getEquipo();
+    }
 }
