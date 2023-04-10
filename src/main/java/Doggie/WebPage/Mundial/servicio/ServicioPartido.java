@@ -23,6 +23,7 @@ public class ServicioPartido {
 
     private final DatosPartidoMapper datosPartidoMapper;
     private final DatosEstadisticaMapper datosEstadisticaMapper;
+    private final PenalesMapper penalesMapper;
 
     public DatosPartido datosPartido(Long partidoId) {
         var partido = repositorioPartido.findById(partidoId).get();
@@ -30,7 +31,14 @@ public class ServicioPartido {
         var golesEquipos = findGolesByPartido(partido);
         var marcador = findMarcadorByPartido(partido);
         var datosEstadisticas = findDatosEstadisticasByPartido(partido);
-        return datosPartidoMapper.from(plantillas, marcador, golesEquipos, partido, datosEstadisticas);
+        var penales = findPenalesByPartido(partido);
+        var marcadorPenales = findMarcadorPenalesByPartido(partido);
+
+        if (golesEquipos.get(0).goles().isEmpty()) {
+            golesEquipos = null;
+        }
+
+        return datosPartidoMapper.from(plantillas, marcador, golesEquipos, partido, datosEstadisticas, marcadorPenales, penales);
     }
 
     public List<Plantilla> findByPartido(Long partidoId) {
@@ -55,6 +63,16 @@ public class ServicioPartido {
         return List.of(datosLocal, datosVisita);
     }
 
+    public List<Penales> findPenalesByPartido(Long partidoId) {
+        var partido = repositorioPartido.findById(partidoId).get();
+        return findPenalesByPartido(partido);
+    }
+
+    public List<MarcadorEquipo> findMarcadorPenalesByPartido(Long partidoId) {
+        var partido = repositorioPartido.findById(partidoId).get();
+        return findMarcadorPenalesByPartido(partido);
+    }
+
     private List<Plantilla> findByPartido(Partido partido) {
 
         var equipoLocal = findEquipoByPartido(partido, true);
@@ -70,9 +88,9 @@ public class ServicioPartido {
     }
 
     private List<MarcadorEquipo> findMarcadorByPartido(Partido partido) {
-        var equipos = findGolesByPartido(partido);
-        return marcadorMapper.from(partido);
+        return marcadorMapper.marcadorGolesFrom(partido);
     }
+
 
     public List<DatosEstadistica> findDatosEstadisticasByPartido(Partido partido) {
         var datosLocal = findDatosEstadisticasByPartido(partido, true);
@@ -90,7 +108,7 @@ public class ServicioPartido {
 
     private GolesEquipo findGolesEquipoByPartido(Partido partido, boolean esLocal) {
         var equipo = filterEsLocal(partido.getEquiposParticipantes(), esLocal);
-        var jugadores = servicioJugador.findGolesByEquipoYPartido(equipo, partido);
+        var jugadores = servicioJugador.findGolesByEquipoYPartido(equipo, partido, false);
         equipo.setJugadores(jugadores);
         return equipoGolesMapper.from(equipo);
     }
@@ -103,16 +121,36 @@ public class ServicioPartido {
         return datosEstadisticaMapper.from(equipo.getPartidosParticipados().get(0));
     }
 
+    private List<Penales> findPenalesByPartido(Partido partido) {
+        var penalesEquipoLocal = findPenalesEquipoByPartido(partido, true);
+        var penalesEquipoVisita = findPenalesEquipoByPartido(partido, false);
+
+        return List.of(penalesEquipoLocal, penalesEquipoVisita);
+    }
+
+    private Penales findPenalesEquipoByPartido(Partido partido, boolean esLocal) {
+        var equipo = filterEsLocal(partido.getEquiposParticipantes(), esLocal);
+        var jugadores = servicioJugador.findGolesByEquipoYPartido(equipo, partido, true);
+        equipo.setJugadores(jugadores);
+        return penalesMapper.from(equipo);
+    }
+
+    private List<MarcadorEquipo> findMarcadorPenalesByPartido(Partido partido) {
+        return marcadorMapper.marcadorPenalesFrom(partido);
+    }
+
     private Equipo filterEsLocal(List<Participante> participantes, boolean esLocal) {
         return participantes.stream()
                 .filter(participante -> participante.isEsLocal() == esLocal)
                 .findFirst()
-                .get().getEquipo();
+                .map(Participante::getEquipo)
+                .orElse(null);
     }
 
     private void filterPartidosParticipadosByPartido(Equipo equipo, Partido partido) {
         var participaciones = equipo.getPartidosParticipados()
-                .stream().filter(participacion -> participacion.getPartido().equals(partido)).toList();
+                .stream().filter(participacion -> participacion.getPartido().equals(partido))
+                .toList();
         equipo.setPartidosParticipados(participaciones);
     }
 }

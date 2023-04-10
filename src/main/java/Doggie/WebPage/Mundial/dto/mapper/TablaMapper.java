@@ -16,7 +16,6 @@ public interface TablaMapper {
 
     default Tabla from(List<Partido> partidos, Grupo grupo) {
         var equipos = grupo.getEquipos();
-
         var tablas = equipos.stream()
                 .map(equipo -> {
                     var partidosEquipo = filter(partidos, equipo);
@@ -24,7 +23,6 @@ public interface TablaMapper {
                 }).toList();
 
         return new Tabla(grupo.getNombre(), tablas);
-
     }
 
     default TablaEquipo from(Equipo equipo, List<Partido> partidos) {
@@ -55,8 +53,8 @@ public interface TablaMapper {
     }
 
     default List<Partido> filter(List<Partido> partidos, Equipo equipo) {
-        return partidos.stream()
-                .filter(partido -> equipo.getPartidosParticipados()
+       return partidos.stream()
+                .filter(partido -> partido.getEquiposParticipantes()
                         .stream().anyMatch(participante -> participante.getEquipo()
                                 .equals(equipo))).toList();
     }

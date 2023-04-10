@@ -4,5 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
-public record Tabla(String grupo, @JsonInclude(JsonInclude.Include.NON_EMPTY) List<TablaEquipo> tablaPorEquipos) {
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public record Penales(List<PenalJugador> penales) {
 }

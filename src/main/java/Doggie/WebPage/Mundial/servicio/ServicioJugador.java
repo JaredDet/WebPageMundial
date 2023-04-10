@@ -1,6 +1,7 @@
 package Doggie.WebPage.Mundial.servicio;
 
 import Doggie.WebPage.Mundial.modelo.entidad.*;
+import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioGol;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioJugador;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class ServicioJugador {
     private final RepositorioJugador repositorioJugador;
+    private final RepositorioGol repositorioGol;
 
     public List<Jugador> findByEquipoYPartido(Equipo equipo, Partido partido) {
         var jugadores = repositorioJugador.findJugadoresConvocadosByEquipoYPartido(equipo.getEquipoId(), partido.getPartidoId());
@@ -21,19 +23,14 @@ public class ServicioJugador {
                 .map(jugador -> filterTarjetasByPartido(jugador, partido)).toList();
     }
 
-    public List<Jugador> findGolesByEquipoYPartido(Equipo equipo, Partido partido) {
-        var jugadores = repositorioJugador.findJugadoresGolesByEquipoYPartido(equipo.getEquipoId(), partido.getPartidoId());
-        return jugadores.stream().map(jugador -> filterGolesByPartido(jugador, partido)).toList();
-    }
-
-    private Jugador filterGolesByPartido(Jugador jugador, Partido partido) {
-        var goles = jugador.getGoles()
+    public List<Jugador> findGolesByEquipoYPartido(Equipo equipo, Partido partido, boolean soloPenales) {
+        return repositorioJugador.findJugadoresGolesByEquipoYPartido(equipo.getEquipoId(), partido.getPartidoId())
                 .stream()
-                .filter(gol -> gol.getPartido()
-                        .equals(partido)).toList();
-
-        jugador.setGoles(goles);
-        return jugador;
+                .peek(jugador -> jugador.setGoles(
+                        soloPenales ? repositorioGol.findPenales(jugador.getJugadorId(), partido.getPartidoId())
+                                : repositorioGol.findGoles(jugador.getJugadorId(), partido.getPartidoId())))
+                .filter(jugador -> !jugador.getGoles().isEmpty())
+                .toList();
     }
 
     private Jugador filterConvocadoByPartido(Jugador jugador, Partido partido) {

@@ -1,6 +1,9 @@
 package Doggie.WebPage.Mundial.dto.mapper;
 
 import Doggie.WebPage.Mundial.dto.*;
+import Doggie.WebPage.Mundial.modelo.entidad.Equipo;
+import Doggie.WebPage.Mundial.modelo.entidad.Gol;
+import Doggie.WebPage.Mundial.modelo.entidad.Participante;
 import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import org.mapstruct.Mapper;
 
@@ -10,7 +13,7 @@ import java.util.List;
 
 public interface DatosPartidoMapper {
 
-    default DatosPartido from(List<Plantilla> plantillas, List<MarcadorEquipo> marcador, List<GolesEquipo> equiposGoles, Partido partido, List<DatosEstadistica> estadisticas) {
+    default DatosPartido from(List<Plantilla> plantillas, List<MarcadorEquipo> marcador, List<GolesEquipo> equiposGoles, Partido partido, List<DatosEstadistica> estadisticas, List<MarcadorEquipo> marcadorPenales, List<Penales> penales) {
 
         var fecha = partido.getFecha();
         var hora = partido.getHora();
@@ -19,6 +22,10 @@ public interface DatosPartidoMapper {
         var estadio = partido.getEstadio().getNombre();
         var fase = partido.getFase().getNombre();
 
-        return new DatosPartido(plantillas, marcador, equiposGoles, fecha, hora, estadio, datosArbitro, fase, estadisticas);
+        if(!partido.isTandaPenales()) {
+            return new DatosPartido(plantillas, marcador, equiposGoles, fecha, hora, estadio, datosArbitro, fase, estadisticas, null, null);
+        }
+
+        return new DatosPartido(plantillas, marcador, equiposGoles, fecha, hora, estadio, datosArbitro, fase, estadisticas, marcadorPenales, penales);
     }
 }

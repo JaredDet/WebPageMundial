@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Entity
 @Table(name = "partidos")
@@ -26,7 +27,8 @@ public class Partido {
     @Temporal(TemporalType.TIME)
     private Date hora;
 
-
+    @Column(columnDefinition = "boolean default false")
+    private boolean tandaPenales;
     @OneToMany(mappedBy = "partido")
     private List<Participante> equiposParticipantes;
 
@@ -49,12 +51,25 @@ public class Partido {
     private Fase fase;
 
     public int golesEquipo(Equipo equipo) {
+        var listaGoles = listaGolesEquipo(equipo);
+        return listaGoles.size() - penales(equipo, Gol::isEntro) - penales(equipo, gol -> !gol.isEntro() && gol.isPenal());
+    }
 
-        var listaGoles = goles.stream()
+    public int penales(Equipo equipo) {
+        return penales(equipo, Gol::isEntro);
+    }
+
+    private int penales(Equipo equipo, Predicate<Gol> predicado) {
+        var listaGoles = listaGolesEquipo(equipo);
+        return (int) listaGoles.stream()
+                .filter(gol -> gol.getMinuto() == null && gol.isPenal() && predicado.test(gol))
+                .count();
+    }
+
+    public List<Gol> listaGolesEquipo(Equipo equipo) {
+        return goles.stream()
                 .filter(gol -> gol.getJugador().getEquipo().equals(equipo))
                 .toList();
-
-        return listaGoles.size();
     }
 
     public int golesRival(Equipo equipo) {

@@ -1,6 +1,8 @@
 package Doggie.WebPage.Mundial.servicio;
 
+import Doggie.WebPage.Mundial.dto.Ronda;
 import Doggie.WebPage.Mundial.dto.Tabla;
+import Doggie.WebPage.Mundial.dto.mapper.RondaMapper;
 import Doggie.WebPage.Mundial.dto.mapper.TablaMapper;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioGrupo;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioPartido;
@@ -15,6 +17,7 @@ public class ServicioTabla {
     private final TablaMapper tablaMapper;
     private final RepositorioPartido repositorioPartido;
     private final RepositorioGrupo repositorioGrupo;
+    private final RondaMapper rondaMapper;
 
     public Tabla findByNombreGrupo(String nombre) {
         var grupo = repositorioGrupo.findByNombre(nombre);
@@ -28,5 +31,9 @@ public class ServicioTabla {
                         .from(repositorioPartido
                                 .findByGrupoId(grupo.getGrupoId()), grupo))
                 .toList();
+    }
+    public List<Ronda> findFaseGrupos() {
+        var partidos = repositorioPartido.findFaseGrupos();
+        return rondaMapper.from(partidos);
     }
 }

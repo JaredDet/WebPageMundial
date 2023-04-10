@@ -16,13 +16,11 @@ import java.util.List;
 @RequestMapping("/api/ronda")
 @RequiredArgsConstructor
 public class ControladorRondaClasificatoria {
-
-    private final ServicioRonda servicioRonda;
     private final ServicioTabla servicioTabla;
 
     @GetMapping("clasificatoria")
     public List<Ronda> clasificatoria() {
-        return servicioRonda.findByFase(1L);
+        return servicioTabla.findFaseGrupos();
     }
 
     @GetMapping("grupos/{nombre}")

@@ -12,8 +12,9 @@ public interface RondaMapper {
     MarcadorMapper marcadorMapper = new MarcadorMapperImpl();
 
     default Ronda from(Partido partido) {
-        var marcador = marcadorMapper.from(partido);
-        return new Ronda(marcador, partido.getFase().getNombre(), partido.getFecha());
+        var marcador = marcadorMapper.marcadorGolesFrom(partido);
+        var marcadorPenales = marcadorMapper.marcadorPenalesFrom(partido);
+        return new Ronda(marcador, marcadorPenales, partido.getFase().getNombre(), partido.getFecha());
     }
 
     default List<Ronda> from(List<Partido> partidos) {

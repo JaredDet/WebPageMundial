@@ -35,5 +35,8 @@ public class Jugador {
 
     @OneToMany(mappedBy = "jugador")
     private List<Cambio> historialSustituciones;
+
+
 }
+
 

@@ -1,5 +1,6 @@
 package Doggie.WebPage.Mundial.dto.mapper;
 
+import Doggie.WebPage.Mundial.dto.DatosGol;
 import Doggie.WebPage.Mundial.dto.GolesJugador;
 import Doggie.WebPage.Mundial.modelo.entidad.Gol;
 import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
@@ -13,11 +14,15 @@ import java.util.List;
 
 public interface GolesJugadorMapper {
 
-    @Mapping(target = "minutos", source = "goles", qualifiedByName = "minutosGoles")
+    @Mapping(target = "goles", source = "goles", qualifiedByName = "goles")
     GolesJugador from(Jugador jugador);
 
-    @Named("minutosGoles")
-    default List<Integer> minutosGoles(List<Gol> goles) {
-        return goles.stream().map(Gol::getMinuto).toList();
+    @Named("goles")
+    default List<DatosGol> goles(List<Gol> golesJugador) {
+        return golesJugador.stream()
+                .filter(gol -> gol.getMinuto() != null)
+                .map(gol -> new DatosGol(gol.getMinuto(),
+                        gol.isPenal()))
+                .toList();
     }
 }

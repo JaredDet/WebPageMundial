@@ -13,15 +13,15 @@ import java.util.List;
 public class ServicioRonda {
 
     private final RepositorioPartido repositorioPartido;
-    private final RondaMapper datosMarcadorMapper;
+    private final RondaMapper rondaMapper;
 
     public List<Ronda> findByFase(Long faseId) {
         var partidos = repositorioPartido.findByFaseId(faseId);
-        return datosMarcadorMapper.from(partidos);
+        return rondaMapper.from(partidos);
     }
 
     public List<Ronda> findRondaFinal() {
         var partidos = repositorioPartido.findRondaFinal();
-        return datosMarcadorMapper.from(partidos);
+        return rondaMapper.from(partidos);
     }
 }

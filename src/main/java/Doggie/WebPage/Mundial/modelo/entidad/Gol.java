@@ -10,6 +10,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+
+
 public class Gol {
 
     @Id
@@ -17,7 +19,13 @@ public class Gol {
     @Column(name = "golId")
     private Long golId;
 
-    private int minuto;
+    private Integer minuto;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean penal;
+
+    @Column(columnDefinition = "boolean default true")
+    private boolean entro;
 
     @ManyToOne
     private Partido partido;

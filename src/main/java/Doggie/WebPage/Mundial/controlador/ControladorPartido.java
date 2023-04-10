@@ -38,4 +38,14 @@ public class ControladorPartido {
     public List<DatosEstadistica> estadisticas(@PathVariable Long partidoId) {
         return servicioPartido.findDatosEstadisticasByPartido(partidoId);
     }
+
+    @GetMapping("/{partidoId}/penales")
+    public List<Penales> penales(@PathVariable Long partidoId) {
+        return servicioPartido.findPenalesByPartido(partidoId);
+    }
+
+    @GetMapping("/{partidoId}/marcador/penales")
+    public List<MarcadorEquipo> marcadorPenales(@PathVariable Long partidoId) {
+        return servicioPartido.findMarcadorPenalesByPartido(partidoId);
+    }
 }

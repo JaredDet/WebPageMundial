@@ -8,5 +8,5 @@ import java.util.List;
 public record JugadorPlantilla(String nombre, int dorsal, String posicion,
                                @JsonInclude(JsonInclude.Include.NON_DEFAULT) Boolean esCapitan,
                                @JsonInclude(JsonInclude.Include.NON_DEFAULT) Boolean esJugadorPartido,
-                               List<DatosTarjeta> tarjetas, DatosSustitucion sustitucion) {
+                               @JsonInclude(JsonInclude.Include.NON_EMPTY) List<DatosTarjeta> tarjetas, DatosSustitucion sustitucion) {
 }

@@ -1,12 +1,14 @@
 package Doggie.WebPage.Mundial.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public record JugadorEnfrentamiento(String nombre, int dorsal, String posicion, boolean esCapitan,
-                                    boolean esJugadorPartido, boolean esTitular, List<DatosTarjeta> tarjetas,
+                                    boolean esJugadorPartido, boolean esTitular, @JsonInclude(JsonInclude.Include.NON_EMPTY) List<DatosTarjeta> tarjetas,
                                     DatosSustitucion sustitucion) implements Comparable<JugadorEnfrentamiento> {
 
     public static final Map<String, Integer> VALORES_POSICIONES = new HashMap<>();

@@ -51,14 +51,8 @@ public interface JugadorEnfrentamientoMapper {
 
     @Named("tarjetasMapping")
     default List<DatosTarjeta> tarjetasMapping(List<Tarjeta> tarjetas) {
-
-        if (tarjetas.isEmpty()) {
-            return null;
-        }
-
         return tarjetas.stream()
-                .map(tarjeta -> new DatosTarjeta(
-                        tarjeta.getColor().name(), tarjeta.getMinuto()))
+                .map(tarjeta -> new DatosTarjeta(tarjeta.getColor().name(), tarjeta.getMinuto()))
                 .toList();
     }
 
@@ -70,7 +64,6 @@ public interface JugadorEnfrentamientoMapper {
         }
 
         var cambio = historialSustituciones.get(0);
-
         return new DatosSustitucion(cambio.isEntra(), !cambio.isEntra(), cambio.getSustitucion().getMinuto());
     }
 }

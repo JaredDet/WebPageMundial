@@ -15,15 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ControladorRondaFinal {
 
-    private final ServicioRonda servicioRondaFinal;
+    private final ServicioRonda servicioRonda;
 
     @GetMapping("{faseId}")
     public List<Ronda> fase(@PathVariable Long faseId) {
-        return servicioRondaFinal.findByFase(faseId);
+        return servicioRonda.findByFase(faseId);
     }
 
     @GetMapping("/torneo")
     public List<Ronda> torneo() {
-        return servicioRondaFinal.findRondaFinal();
+        return servicioRonda.findRondaFinal();
     }
 }
