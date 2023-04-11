@@ -12,16 +12,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ServicioRonda {
 
-    private final RepositorioPartido repositorioPartido;
+    private final RondaCache rondaCache;
     private final RondaMapper rondaMapper;
 
     public List<Ronda> findByFase(Long faseId) {
-        var partidos = repositorioPartido.findByFaseId(faseId);
+        var partidos = rondaCache.getPartidosByFaseId(faseId);
         return rondaMapper.from(partidos);
     }
 
     public List<Ronda> findRondaFinal() {
-        var partidos = repositorioPartido.findRondaFinal();
+        var partidos = rondaCache.getRondaFinal();
         return rondaMapper.from(partidos);
     }
 }

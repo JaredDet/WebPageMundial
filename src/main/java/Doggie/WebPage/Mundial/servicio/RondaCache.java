@@ -11,26 +11,24 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class TablaCache {
+public class RondaCache {
+
     private final LoadingCache<Long, List<Partido>> cache;
 
-
     @Autowired
-    public TablaCache(RepositorioPartido repositorioPartido) {
+    public RondaCache(RepositorioPartido repositorioPartido) {
 
         this.cache = Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)
                 .maximumSize(100)
-                .build(grupoId -> grupoId == 0L ? repositorioPartido.findFaseGrupos() : repositorioPartido.findByGrupoId(grupoId));
+                .build(faseId -> faseId == 0L ? repositorioPartido.findRondaFinal() : repositorioPartido.findByFaseId(faseId));
     }
 
-    public List<Partido> getPartidosByGrupoId(Long grupoId) {
-        return cache.get(grupoId);
+    public List<Partido> getPartidosByFaseId(Long faseId) {
+        return cache.get(faseId);
     }
 
-    public List<Partido> getFaseGrupos() {
+    public List<Partido> getRondaFinal() {
         return cache.get(0L);
     }
 }
-
-
