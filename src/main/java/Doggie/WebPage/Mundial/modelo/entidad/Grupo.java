@@ -1,6 +1,8 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +13,8 @@ import java.util.List;
 @Table(name = "grupos")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"equipos"})
+@EqualsAndHashCode
 public class Grupo {
 
     @Id
@@ -20,6 +23,7 @@ public class Grupo {
     private Long grupoId;
     private String nombre;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "grupo")
     private List<Equipo> equipos;
 }

@@ -15,25 +15,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ServicioTabla {
     private final TablaMapper tablaMapper;
-    private final RepositorioPartido repositorioPartido;
+    private final TablaCache tablaCache;
     private final RepositorioGrupo repositorioGrupo;
     private final RondaMapper rondaMapper;
 
     public Tabla findByNombreGrupo(String nombre) {
         var grupo = repositorioGrupo.findByNombre(nombre);
-        var partidos = repositorioPartido.findByGrupoId(grupo.getGrupoId());
+        var partidos = tablaCache.getPartidosByGrupoId(grupo.getGrupoId());
         return tablaMapper.from(partidos, grupo);
     }
 
     public List<Tabla> findAll() {
         return repositorioGrupo.findAll().stream()
                 .map(grupo -> tablaMapper
-                        .from(repositorioPartido
-                                .findByGrupoId(grupo.getGrupoId()), grupo))
+                        .from(tablaCache.getPartidosByGrupoId(grupo.getGrupoId()), grupo))
                 .toList();
     }
+
     public List<Ronda> findFaseGrupos() {
-        var partidos = repositorioPartido.findFaseGrupos();
+        var partidos = tablaCache.getFaseGrupos();
         return rondaMapper.from(partidos);
     }
 }
+

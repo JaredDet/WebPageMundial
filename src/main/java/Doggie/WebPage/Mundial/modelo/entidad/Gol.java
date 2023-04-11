@@ -1,6 +1,9 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,7 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
+@EqualsAndHashCode
 
 public class Gol {
 
@@ -27,9 +30,11 @@ public class Gol {
     @Column(columnDefinition = "boolean default true")
     private boolean entro;
 
+    @JsonBackReference
     @ManyToOne
     private Partido partido;
 
+    @JsonBackReference
     @ManyToOne
     private Jugador jugador;
 }

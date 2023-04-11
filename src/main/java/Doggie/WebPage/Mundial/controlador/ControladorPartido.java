@@ -21,7 +21,7 @@ public class ControladorPartido {
 
     @GetMapping("/{partidoId}/plantillas")
     public List<Plantilla> plantillas(@PathVariable Long partidoId) {
-        return servicioPartido.findByPartido(partidoId);
+        return servicioPartido.findPlantillasByPartido(partidoId);
     }
 
     @GetMapping("/{partidoId}/goles")

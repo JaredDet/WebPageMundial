@@ -1,19 +1,20 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 @Entity
 @Table(name = "partidos")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"equiposParticipantes", "convocados", "goles", "sustituciones"})
 public class Partido {
 
     @Id
@@ -29,24 +30,32 @@ public class Partido {
 
     @Column(columnDefinition = "boolean default false")
     private boolean tandaPenales;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "partido")
     private List<Participante> equiposParticipantes;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "partido")
     private List<Convocado> convocados;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "partido")
     private List<Gol> goles;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "partido")
     private List<Sustitucion> sustituciones;
 
+    @JsonBackReference
     @OneToOne
     private Estadio estadio;
 
+    @JsonBackReference
     @OneToOne
     private Arbitro arbitro;
 
+    @JsonBackReference
     @ManyToOne
     private Fase fase;
 
@@ -68,7 +77,7 @@ public class Partido {
 
     public List<Gol> listaGolesEquipo(Equipo equipo) {
         return goles.stream()
-                .filter(gol -> gol.getJugador().getEquipo().equals(equipo))
+                .filter(gol -> gol.getJugador().getEquipo().getEquipoId().equals(equipo.getEquipoId()))
                 .toList();
     }
 
@@ -82,5 +91,18 @@ public class Partido {
                 .filter(participante -> participante.getEquipo() != equipo)
                 .findFirst().get()
                 .getEquipo();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Partido partido = (Partido) o;
+        return Objects.equals(partidoId, partido.partidoId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(partidoId);
     }
 }

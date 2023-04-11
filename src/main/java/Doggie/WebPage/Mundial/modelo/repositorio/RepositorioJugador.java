@@ -1,7 +1,5 @@
 package Doggie.WebPage.Mundial.modelo.repositorio;
 
-import Doggie.WebPage.Mundial.modelo.entidad.Cambio;
-import Doggie.WebPage.Mundial.modelo.entidad.Convocado;
 import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,15 +32,4 @@ public interface RepositorioJugador extends JpaRepository<Jugador, Long> {
             "WHERE Participantes.Equipo_equipo_id = ?1 " +
             "AND Participantes.Partido_partido_id = ?2", nativeQuery = true)
     List<Jugador> findJugadoresConvocadosByEquipoYPartido(Long equipoId, Long partidoId);
-
-    @Query(value = "SELECT jugadores.* FROM Cambios " +
-            "INNER JOIN Jugadores " +
-            "ON Cambios.Jugador_jugador_id = Jugadores.jugador_id " +
-            "INNER JOIN Equipos " +
-            "ON Jugadores.Equipo_equipo_id = Equipos.equipo_id " +
-            "INNER JOIN Participantes " +
-            "ON Equipos.equipo_id = Participantes.Equipo_equipo_id " +
-            "WHERE Participantes.Equipo_equipo_id = ?1 " +
-            "AND Participantes.Partido_partido_id = ?2", nativeQuery = true)
-    List<Jugador> findJugadoresCambiosByEquipoYPartido(Long equipoId, Long partidoId);
 }

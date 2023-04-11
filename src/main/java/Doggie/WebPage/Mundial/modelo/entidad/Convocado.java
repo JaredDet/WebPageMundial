@@ -1,6 +1,9 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Convocado {
 
     @Id
@@ -17,11 +21,15 @@ public class Convocado {
     @Column(name = "convocadoId")
     private Long convocadoId;
 
+    @JsonManagedReference
     @ManyToOne
     private Jugador jugador;
+
+    @JsonBackReference
     @ManyToOne
     private Partido partido;
 
+    @JsonManagedReference
     @OneToOne
     private Posicion posicion;
 

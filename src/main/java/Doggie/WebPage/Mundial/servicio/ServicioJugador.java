@@ -2,7 +2,6 @@ package Doggie.WebPage.Mundial.servicio;
 
 import Doggie.WebPage.Mundial.modelo.entidad.*;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioGol;
-import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioJugador;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,19 +11,19 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class ServicioJugador {
-    private final RepositorioJugador repositorioJugador;
+    private final JugadorCache jugadorCache;
     private final RepositorioGol repositorioGol;
 
     public List<Jugador> findByEquipoYPartido(Equipo equipo, Partido partido) {
-        var jugadores = repositorioJugador.findJugadoresConvocadosByEquipoYPartido(equipo.getEquipoId(), partido.getPartidoId());
+        var jugadores = jugadorCache.getJugadoresConvocados(equipo.getEquipoId(), partido.getPartidoId());
         return jugadores.stream()
                 .map(jugador -> filterConvocadoByPartido(jugador, partido))
                 .map(jugador -> filterCambioByPartido(jugador, partido))
                 .map(jugador -> filterTarjetasByPartido(jugador, partido)).toList();
     }
 
-    public List<Jugador> findGolesByEquipoYPartido(Equipo equipo, Partido partido, boolean soloPenales) {
-        return repositorioJugador.findJugadoresGolesByEquipoYPartido(equipo.getEquipoId(), partido.getPartidoId())
+    public List<Jugador> findJugadorConGolesByEquipoYPartido(Equipo equipo, Partido partido, boolean soloPenales) {
+        return jugadorCache.getJugadoresConGoles(equipo.getEquipoId(), partido.getPartidoId())
                 .stream()
                 .peek(jugador -> jugador.setGoles(
                         soloPenales ? repositorioGol.findPenales(jugador.getJugadorId(), partido.getPartidoId())
@@ -38,7 +37,6 @@ public class ServicioJugador {
                 .stream()
                 .filter(convocado -> convocado.getPartido()
                         .equals(partido)).toList();
-
         jugador.setConvocaciones(convocaciones);
         return jugador;
     }

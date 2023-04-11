@@ -1,6 +1,8 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +12,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Sustitucion {
 
     @Id
@@ -17,6 +20,7 @@ public class Sustitucion {
     @Column(name = "sustitucionId")
     private Long sustitucionId;
 
+    @JsonBackReference
     @ManyToOne
     private Partido partido;
     private int minuto;

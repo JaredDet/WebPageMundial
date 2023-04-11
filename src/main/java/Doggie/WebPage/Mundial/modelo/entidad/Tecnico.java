@@ -1,6 +1,8 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +12,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Tecnico {
 
     @Id
@@ -19,6 +22,7 @@ public class Tecnico {
 
     private String nombre;
 
+    @JsonBackReference
     @ManyToOne
     private Pais pais;
 }

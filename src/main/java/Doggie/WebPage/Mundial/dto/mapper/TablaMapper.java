@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
+import static java.util.Collections.sort;
+
 @Mapper(componentModel = "spring")
 public interface TablaMapper {
 
@@ -20,7 +22,7 @@ public interface TablaMapper {
                 .map(equipo -> {
                     var partidosEquipo = filter(partidos, equipo);
                     return from(equipo, partidosEquipo);
-                }).toList();
+                }).sorted().toList();
 
         return new Tabla(grupo.getNombre(), tablas);
     }
