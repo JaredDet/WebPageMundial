@@ -4,6 +4,7 @@ import Doggie.WebPage.Mundial.dto.*;
 import Doggie.WebPage.Mundial.dto.mapper.*;
 import Doggie.WebPage.Mundial.modelo.entidad.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 
 public class ServicioPartido {
 

@@ -45,7 +45,6 @@ public class ServicioJugador {
         var historialSustituciones = jugador.getHistorialSustituciones()
                 .stream()
                 .filter(cambio -> cambio.getSustitucion().getPartido().equals(partido)).toList();
-
         jugador.setHistorialSustituciones(historialSustituciones);
         return jugador;
     }

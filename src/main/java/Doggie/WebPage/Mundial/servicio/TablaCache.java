@@ -4,6 +4,7 @@ import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioPartido;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,15 @@ public class TablaCache {
         this.cache = Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)
                 .maximumSize(100)
-                .build(grupoId -> grupoId == 0L ? repositorioPartido.findFaseGrupos() : repositorioPartido.findByGrupoId(grupoId));
+                .build(grupoId -> {
+                    var partidos = grupoId == 0L ? repositorioPartido.findFaseGrupos() : repositorioPartido.findByGrupoId(grupoId);
+
+                    if (partidos != null) {
+                        partidos.forEach(partido -> Hibernate.initialize(partido.getEquiposParticipantes()));
+                    }
+
+                    return partidos;
+                });
     }
 
     public List<Partido> getPartidosByGrupoId(Long grupoId) {

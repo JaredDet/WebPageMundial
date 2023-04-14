@@ -4,6 +4,7 @@ import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioPartido;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,17 @@ public class RondaCache {
         this.cache = Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)
                 .maximumSize(100)
-                .build(faseId -> faseId == 0L ? repositorioPartido.findRondaFinal() : repositorioPartido.findByFaseId(faseId));
+                .build(faseId -> {
+                    var partidos = faseId == 0L ? repositorioPartido.findRondaFinal() : repositorioPartido.findByFaseId(faseId);
+                    if (partidos != null) {
+                        partidos.forEach(partido -> {
+                            Hibernate.initialize(partido.getGoles());
+                            Hibernate.initialize(partido.getEquiposParticipantes());
+                        });
+                    }
+
+                    return partidos;
+                });
     }
 
     public List<Partido> getPartidosByFaseId(Long faseId) {

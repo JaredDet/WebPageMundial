@@ -8,6 +8,7 @@ import Doggie.WebPage.Mundial.modelo.entidad.Convocado;
 import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
 import Doggie.WebPage.Mundial.modelo.entidad.Tarjeta;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -17,46 +18,30 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface JugadorEnfrentamientoMapper {
 
-    @Mapping(target = "nombre", source = "nombre")
-    @Mapping(target = "dorsal", source = "dorsal")
-    @Mapping(target = "posicion", source = "convocaciones", qualifiedByName = "posicion")
-    @Mapping(target = "tarjetas", source = "tarjetas", qualifiedByName = "tarjetasMapping")
-    @Mapping(target = "sustitucion", source = "historialSustituciones", qualifiedByName = "cambio")
-    @Mapping(target = "esTitular", source = "convocaciones", qualifiedByName = "titular")
-    @Mapping(target = "esJugadorPartido", source = "convocaciones", qualifiedByName = "mvp")
-    @Mapping(target = "esCapitan", source = "convocaciones", qualifiedByName = "capitan")
-    JugadorEnfrentamiento from(Jugador jugador);
+    default JugadorEnfrentamiento from(Jugador jugador) {
+
+        var participacion = jugador.getConvocaciones().get(0);
+        var posicion = participacion.getPosicion();
+        var titular = participacion.isEsTitular();
+        var mvp = participacion.isEsJugadorPartido();
+        var capitan = participacion.isEsCapitan();
+
+        var tarjetas = tarjetasMapping(jugador.getTarjetas());
+        var cambio = cambio(jugador.getHistorialSustituciones());
+
+        var posicionNombre = posicion != null ? posicion.getAbreviacion() : null;
+
+        return new JugadorEnfrentamiento(jugador.getNombre(), jugador.getDorsal(), posicionNombre, capitan, mvp, titular, tarjetas, cambio);
+    }
 
     List<JugadorEnfrentamiento> from(List<Jugador> jugadores);
 
-    @Named("posicion")
-    default String posicion(List<Convocado> convocaciones) {
-        return convocaciones.get(0).getPosicion().getAbreviacion();
-    }
-
-    @Named("titular")
-    default boolean titular(List<Convocado> convocaciones) {
-        return convocaciones.get(0).isEsTitular();
-    }
-
-    @Named("mvp")
-    default boolean mvp(List<Convocado> convocaciones) {
-        return convocaciones.get(0).isEsJugadorPartido();
-    }
-
-    @Named("capitan")
-    default boolean capitan(List<Convocado> convocaciones) {
-        return convocaciones.get(0).isEsCapitan();
-    }
-
-    @Named("tarjetasMapping")
     default List<DatosTarjeta> tarjetasMapping(List<Tarjeta> tarjetas) {
         return tarjetas.stream()
                 .map(tarjeta -> new DatosTarjeta(tarjeta.getColor().name(), tarjeta.getMinuto()))
                 .toList();
     }
 
-    @Named("cambio")
     default DatosSustitucion cambio(List<Cambio> historialSustituciones) {
 
         if (historialSustituciones.isEmpty()) {

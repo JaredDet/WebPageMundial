@@ -4,6 +4,7 @@ import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioJugador;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,13 +20,22 @@ public class JugadorCache {
     @Autowired
     public JugadorCache(RepositorioJugador repositorioJugador) {
         this.repositorioJugador = repositorioJugador;
+
         this.cache = Caffeine.newBuilder()
-                .maximumSize(1000)
                 .expireAfterWrite(10, TimeUnit.MINUTES)
+                .maximumSize(100)
                 .build(key -> {
                     var equipoId = key.getEquipoId();
                     var partidoId = key.getPartidoId();
-                    return this.repositorioJugador.findJugadoresConvocadosByEquipoYPartido(equipoId, partidoId);
+                    List<Jugador> jugadores = this.repositorioJugador.findJugadoresConvocadosByEquipoYPartido(equipoId, partidoId);
+                    jugadores.forEach(jugador -> {
+                        Hibernate.initialize(jugador.getHistorialSustituciones());
+                        jugador.getHistorialSustituciones().forEach(sustitucion ->
+                            Hibernate.initialize(sustitucion.getSustitucion()));
+                        Hibernate.initialize(jugador.getTarjetas());
+                        Hibernate.initialize(jugador.getConvocaciones());
+                    });
+                    return jugadores;
                 });
     }
 

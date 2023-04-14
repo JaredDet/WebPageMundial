@@ -2,7 +2,6 @@ package Doggie.WebPage.Mundial.servicio;
 
 import Doggie.WebPage.Mundial.dto.Ronda;
 import Doggie.WebPage.Mundial.dto.mapper.RondaMapper;
-import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioPartido;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
