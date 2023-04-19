@@ -11,11 +11,12 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class ServicioJugador {
-    private final JugadorCache jugadorCache;
     private final RepositorioGol repositorioGol;
 
     public List<Jugador> findByEquipoYPartido(Equipo equipo, Partido partido) {
-        var jugadores = jugadorCache.getJugadoresConvocados(equipo.getEquipoId(), partido.getPartidoId());
+        var jugadores = partido.getConvocados().stream().map(Convocado::getJugador)
+                .filter(jugador -> jugador.getEquipo().getEquipoId().equals(equipo.getEquipoId())).toList();
+
         return jugadores.stream()
                 .map(jugador -> filterConvocadoByPartido(jugador, partido))
                 .map(jugador -> filterCambioByPartido(jugador, partido))
@@ -23,8 +24,10 @@ public class ServicioJugador {
     }
 
     public List<Jugador> findJugadorConGolesByEquipoYPartido(Equipo equipo, Partido partido, boolean soloPenales) {
-        return jugadorCache.getJugadoresConGoles(equipo.getEquipoId(), partido.getPartidoId())
-                .stream()
+        var jugadores = partido.getConvocados().stream().map(Convocado::getJugador)
+                .filter(jugador -> jugador.getEquipo().getEquipoId().equals(equipo.getEquipoId())).toList();
+
+        return jugadores.stream()
                 .peek(jugador -> jugador.setGoles(
                         soloPenales ? repositorioGol.findPenales(jugador.getJugadorId(), partido.getPartidoId())
                                 : repositorioGol.findGoles(jugador.getJugadorId(), partido.getPartidoId())))

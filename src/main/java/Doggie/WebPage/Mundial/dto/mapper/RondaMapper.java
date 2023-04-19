@@ -11,12 +11,12 @@ public interface RondaMapper {
 
     MarcadorMapper marcadorMapper = new MarcadorMapperImpl();
 
-    default Ronda from(Partido partido) {
+    default ResumenPartido from(Partido partido) {
         var marcador = marcadorMapper.marcadorGolesFrom(partido);
         var marcadorPenales = marcadorMapper.marcadorPenalesFrom(partido);
         var fase = getFase(partido);
 
-        return new Ronda(marcador, marcadorPenales, fase, partido.getFecha());
+        return new ResumenPartido(marcador, marcadorPenales, fase, partido.getFecha());
     }
 
     private String getFase(Partido partido) {
@@ -27,7 +27,7 @@ public interface RondaMapper {
         return fase;
     }
 
-    default List<Ronda> from(List<Partido> partidos) {
+    default List<ResumenPartido> from(List<Partido> partidos) {
         return partidos.stream().map(this::from).toList();
     }
 }

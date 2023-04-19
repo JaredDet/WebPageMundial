@@ -37,4 +37,14 @@ public class Gol {
     @JsonBackReference
     @ManyToOne
     private Jugador jugador;
+
+    /**
+     * Devuelve true si el gol no fue convertido, es decir, si no entró en la portería.
+     *
+     * @return true si el gol no entró, false si el gol fue convertido.
+     */
+
+    public boolean noEntro() {
+        return !entro;
+    }
 }

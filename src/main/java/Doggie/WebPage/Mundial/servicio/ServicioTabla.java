@@ -1,11 +1,13 @@
 package Doggie.WebPage.Mundial.servicio;
 
-import Doggie.WebPage.Mundial.dto.Ronda;
+import Doggie.WebPage.Mundial.dto.ResumenPartido;
 import Doggie.WebPage.Mundial.dto.Tabla;
 import Doggie.WebPage.Mundial.dto.mapper.RondaMapper;
 import Doggie.WebPage.Mundial.dto.mapper.TablaMapper;
+import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioGrupo;
-import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioPartido;
+import Doggie.WebPage.Mundial.servicio.cache.TablaCache;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,13 @@ public class ServicioTabla {
 
     public List<Tabla> findAll() {
         return repositorioGrupo.findAll().stream()
-                .map(grupo -> tablaMapper
-                        .from(tablaCache.getPartidosByGrupoId(grupo.getGrupoId()), grupo))
-                .toList();
+                .map(grupo -> {
+                    var partidos = tablaCache.getPartidosByGrupoId(grupo.getGrupoId());
+                    return tablaMapper.from(partidos, grupo);
+                }).toList();
     }
 
-    public List<Ronda> findFaseGrupos() {
+    public List<ResumenPartido> findFaseGrupos() {
         var partidos = tablaCache.getFaseGrupos();
         return rondaMapper.from(partidos);
     }

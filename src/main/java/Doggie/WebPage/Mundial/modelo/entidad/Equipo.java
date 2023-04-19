@@ -43,13 +43,34 @@ public class Equipo {
     @ManyToOne
     private Grupo grupo;
 
+    /**
+     * Determina si el equipo ha ganado el partido.
+     *
+     * @param partido el partido que se desea verificar.
+     * @return true si el equipo ha ganado el partido, false en caso contrario.
+     */
+
     public boolean gana(Partido partido) {
         return partido.golesEquipo(this) > partido.golesRival(this);
     }
 
+    /**
+     * Determina si el equipo ha perdido el partido.
+     *
+     * @param partido el partido que se desea verificar.
+     * @return true si el equipo ha perdido, false en caso contrario.
+     */
+
     public boolean pierde(Partido partido) {
         return partido.golesEquipo(this) < partido.golesRival(this);
     }
+
+    /**
+     * Determina si el equipo empató el partido o no.
+     *
+     * @param partido el partido en el que se quiere determinar si el equipo empató o no.
+     * @return true si el equipo empató el partido, false en caso contrario.
+     */
 
     public boolean empata(Partido partido) {
         return partido.golesEquipo(this) == partido.golesRival(this);

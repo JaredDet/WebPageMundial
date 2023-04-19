@@ -31,19 +31,19 @@ public class Jugador {
     private Equipo equipo;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "jugador")
+    @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<Gol> goles;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "jugador")
+    @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<Tarjeta> tarjetas;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "jugador")
+    @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<Convocado> convocaciones;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "jugador")
+    @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<Cambio> historialSustituciones;
 }
 
