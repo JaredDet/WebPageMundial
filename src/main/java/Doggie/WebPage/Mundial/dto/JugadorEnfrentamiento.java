@@ -2,6 +2,7 @@ package Doggie.WebPage.Mundial.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,7 @@ public record JugadorEnfrentamiento(String nombre, int dorsal,
 
 
     @Override
-    public int compareTo(JugadorEnfrentamiento o) {
+    public int compareTo(@NotNull JugadorEnfrentamiento o) {
 
         if (posicion == null) {
             return 1;

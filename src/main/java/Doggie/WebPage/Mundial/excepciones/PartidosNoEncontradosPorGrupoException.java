@@ -30,7 +30,7 @@ public class PartidosNoEncontradosPorGrupoException extends RecursoException {
                 "Motivo: %s.%n" +
                 "La operación se realizó el %s.%n" +
                 "Por favor, verifique que ha proporcionado el ID correcto y vuelva a intentarlo.";
-        return getMensaje(formato, grupoId);
+        return getMensaje(formato, grupoId, false);
     }
 
     @Override

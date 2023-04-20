@@ -4,14 +4,10 @@ import Doggie.WebPage.Mundial.dto.DatosSustitucion;
 import Doggie.WebPage.Mundial.dto.DatosTarjeta;
 import Doggie.WebPage.Mundial.dto.JugadorEnfrentamiento;
 import Doggie.WebPage.Mundial.modelo.entidad.Cambio;
-import Doggie.WebPage.Mundial.modelo.entidad.Convocado;
 import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
 import Doggie.WebPage.Mundial.modelo.entidad.Tarjeta;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 import java.util.List;
 

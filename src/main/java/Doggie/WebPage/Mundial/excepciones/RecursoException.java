@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 
 @Getter
 public abstract class RecursoException extends RuntimeException {
@@ -81,15 +80,15 @@ public abstract class RecursoException extends RuntimeException {
         return String.format(formato, recurso, motivo, fechaOperacion);
     }
 
-    protected String getMensaje(String formato, Long id) {
+    protected String getMensaje(String formato, Long id, boolean tieneRecurso) {
+
+        if (tieneRecurso) {
+            return String.format(formato, recurso, id, motivo, fechaOperacion);
+        }
         return String.format(formato, id, motivo, fechaOperacion);
     }
 
     protected String getMensaje(String formato, Long id, Long otroId) {
         return String.format(formato, id, otroId, motivo, fechaOperacion);
-    }
-
-    protected String getMensajeConId(String formato, Long id) {
-        return String.format(formato, recurso, id, motivo, fechaOperacion);
     }
 }

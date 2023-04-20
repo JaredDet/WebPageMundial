@@ -30,7 +30,7 @@ public class PartidosNoEncontradosPorFaseException extends RecursoException {
                 "Motivo: %s.%n" +
                 "La operación se realizó el %s.%n" +
                 "Por favor, verifique que ha proporcionado el ID correcto y vuelva a intentarlo.";
-        return getMensaje(formato, faseId);
+        return getMensaje(formato, faseId, false);
     }
 
     @Override

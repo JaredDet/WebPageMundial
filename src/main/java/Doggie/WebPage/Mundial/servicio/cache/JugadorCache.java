@@ -9,10 +9,10 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 
 import java.util.*;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRES_NE
 @Slf4j
 @Component
 public class JugadorCache {
-    private final LoadingCache<CacheKey, List<Jugador>> cache;
+    private final LoadingCache<@NonNull CacheKey, @NonNull List<Jugador>> cache;
     private final RepositorioJugador repositorioJugador;
     private final CargaJugador cargaJugador;
 
@@ -44,7 +44,7 @@ public class JugadorCache {
     @Transactional(propagation = REQUIRES_NEW)
     public List<Jugador> getJugadores(Long equipoId, Long partidoId) {
         CacheKey key = new CacheKey(equipoId, partidoId);
-        var jugadores = Optional.ofNullable(cache.get(key))
+        var jugadores = Optional.of(cache.get(key))
                 .orElseThrow(() -> {
                     var excepcion = new JugadoresNoEncontradosException(partidoId, equipoId);
                     log.error(excepcion.getMensajePersonalizado());

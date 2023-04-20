@@ -17,14 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 
+@SuppressWarnings("SpellCheckingInspection")
 @Slf4j
 @Component
 public class CargaPartido {
 
+    @SuppressWarnings("SpellCheckingInspection")
     private final Map<DetallesPartido, Consumer<Partido>> detallesMap;
     private final JugadorCache jugadorCache;
 
@@ -46,6 +47,7 @@ public class CargaPartido {
      * @param detallesBuscados el conjunto de detalles a cargar
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public void cargar(List<Partido> partidos, List<DetallesPartido> detallesBuscados) {
         partidos.forEach(partido -> cargar(partido, detallesBuscados));
@@ -59,6 +61,7 @@ public class CargaPartido {
      * @throws IllegalArgumentException si el conjunto de detalles buscados es nulo o está vacío
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public void cargar(Partido partido, List<DetallesPartido> detallesBuscados) {
         if (detallesBuscados == null || detallesBuscados.isEmpty()) {
@@ -78,6 +81,7 @@ public class CargaPartido {
      */
 
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarEquipos(Partido partido) {
 
         if (noSeHanCargadoLosEquipos(partido)) {
@@ -95,6 +99,7 @@ public class CargaPartido {
      * @param partido El partido cuyos goles se quieren cargar.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarGoles(Partido partido) {
 
         verificarEquiposInicializados(partido);
@@ -115,6 +120,7 @@ public class CargaPartido {
      * @throws EquiposNoInicializadosException si la lista de equipos participantes del partido no ha sido inicializada.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarEstadisticas(Partido partido) {
 
         verificarEquiposInicializados(partido);
@@ -134,6 +140,7 @@ public class CargaPartido {
      */
 
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarJugadores(Partido partido) {
 
         verificarEquiposInicializados(partido);
@@ -153,6 +160,7 @@ public class CargaPartido {
      * @param equipo El equipo del cual se desean cargar sus estadísticas.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarEstadisticas(Participante equipo) {
 
         if (!Hibernate.isInitialized(equipo.getEstadisticas())) {
@@ -160,6 +168,7 @@ public class CargaPartido {
         }
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarJugadores(Partido partido, Equipo equipo) {
 
         if (!Hibernate.isInitialized(equipo.getJugadores())) {
@@ -169,6 +178,7 @@ public class CargaPartido {
         }
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void verificarEquiposInicializados(Partido partido) {
         if (noSeHanCargadoLosEquipos(partido)) {
             var excepcion = new EquiposNoInicializadosException(partido.getPartidoId());
@@ -185,10 +195,12 @@ public class CargaPartido {
      * @return true si los equipos no han sido cargados, false de lo contrario.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private boolean noSeHanCargadoLosEquipos(Partido partido) {
         return !Hibernate.isInitialized(partido.getEquiposParticipantes());
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private String getNombreEquipo(Equipo equipo) {
         return equipo.getPais().getNombre();
     }

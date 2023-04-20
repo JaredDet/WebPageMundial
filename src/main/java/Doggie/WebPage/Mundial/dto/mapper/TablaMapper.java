@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
-import static java.util.Collections.sort;
-
 @Mapper(componentModel = "spring")
 public interface TablaMapper {
 

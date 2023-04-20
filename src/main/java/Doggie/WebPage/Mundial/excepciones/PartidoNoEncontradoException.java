@@ -35,7 +35,7 @@ public final class PartidoNoEncontradoException extends RecursoException {
                 "Motivo: %s.%n" +
                 "Operación realizada el %s.%n" +
                 "Por favor, verifique que ha proporcionado el ID correcto y vuelva a intentarlo.";
-        return getMensaje(formato, partidoId);
+        return getMensaje(formato, partidoId, false);
     }
 
     @Override

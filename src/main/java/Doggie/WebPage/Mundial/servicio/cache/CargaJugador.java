@@ -9,13 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 
+@SuppressWarnings("SpellCheckingInspection")
 @Slf4j
 @Component
 public class CargaJugador {
+    @SuppressWarnings("SpellCheckingInspection")
     private final Map<DetallesJugador, Consumer<Jugador>> detallesMap;
 
     public CargaJugador() {
@@ -34,6 +35,7 @@ public class CargaJugador {
      * @param detallesBuscados el conjunto de detalles a cargar
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Transactional(readOnly = true)
     public void cargar(List<Jugador> jugadores, List<DetallesJugador> detallesBuscados) {
         jugadores.forEach(jugador -> cargar(jugador, detallesBuscados));
@@ -47,6 +49,7 @@ public class CargaJugador {
      * @throws IllegalArgumentException si el conjunto de detalles buscados es nulo o está vacío
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Transactional(readOnly = true)
     public void cargar(Jugador jugador, List<DetallesJugador> detallesBuscados) {
         if (detallesBuscados == null || detallesBuscados.isEmpty()) {
@@ -65,6 +68,7 @@ public class CargaJugador {
      * @param jugador El jugador cuyas convocatorias se deben cargar.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarConvocaciones(Jugador jugador) {
 
         if (Hibernate.isInitialized(jugador.getConvocaciones())) {
@@ -78,6 +82,7 @@ public class CargaJugador {
      * @param jugador el objeto Jugador cuyo historial de sustituciones se quiere cargar.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarHistorialSustituciones(Jugador jugador) {
 
         if (!Hibernate.isInitialized(jugador.getHistorialSustituciones())) {
@@ -93,6 +98,7 @@ public class CargaJugador {
      * @param cambio el objeto Cambio del que se desea cargar la sustitución.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarCambios(Cambio cambio) {
 
         if (!Hibernate.isInitialized(cambio.getSustitucion())) {
@@ -106,6 +112,7 @@ public class CargaJugador {
      * @param jugador El jugador cuyas tarjetas se deben cargar.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarTarjetas(Jugador jugador) {
 
         if (!Hibernate.isInitialized(jugador.getTarjetas())) {
@@ -119,6 +126,7 @@ public class CargaJugador {
      * @param jugador El jugador cuyos goles se deben cargar.
      */
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void cargarGoles(Jugador jugador) {
 
         if (!Hibernate.isInitialized(jugador.getGoles())) {

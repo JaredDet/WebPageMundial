@@ -6,6 +6,7 @@ import Doggie.WebPage.Mundial.modelo.entidad.*;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioPartido;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
@@ -29,7 +29,7 @@ public class PartidoCache {
         this.cache = Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)
                 .maximumSize(100)
-                .build(partidoId -> repositorioPartido.findById(partidoId).orElse(null));
+                .build(partidoId -> repositorioPartido.findById(partidoId).orElseThrow(() -> lanzarExcepcion(partidoId)));
         this.cargaPartido = cargaPartido;
     }
 
@@ -46,14 +46,16 @@ public class PartidoCache {
     @Transactional(propagation = REQUIRES_NEW)
     public Partido getPartido(Long partidoId, List<DetallesPartido> detallesPartido) {
 
-        var partido = Optional.ofNullable(cache.get(partidoId))
-                .orElseThrow(() -> {
-                    var excepcion = new PartidoNoEncontradoException(partidoId);
-                    log.error(excepcion.getMensajePersonalizado());
-                    return excepcion;
-                });
+        var partido = Optional.of(cache.get(partidoId))
+                .orElseThrow(() -> lanzarExcepcion(partidoId));
         cargaPartido.cargar(partido, detallesPartido);
         return partido;
+    }
+
+    private PartidoNoEncontradoException lanzarExcepcion(Long partidoId) {
+        var excepcion = new PartidoNoEncontradoException(partidoId);
+        log.error(excepcion.getMensajePersonalizado());
+        return excepcion;
     }
 }
 

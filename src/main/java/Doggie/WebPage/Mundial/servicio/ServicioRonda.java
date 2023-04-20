@@ -2,7 +2,6 @@ package Doggie.WebPage.Mundial.servicio;
 
 import Doggie.WebPage.Mundial.dto.ResumenPartido;
 import Doggie.WebPage.Mundial.dto.mapper.RondaMapper;
-import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import Doggie.WebPage.Mundial.servicio.cache.RondaCache;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

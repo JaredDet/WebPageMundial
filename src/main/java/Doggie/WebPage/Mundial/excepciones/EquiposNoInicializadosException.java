@@ -18,7 +18,7 @@ public class EquiposNoInicializadosException extends RecursoException {
                 "debido a que %s.%n" +
                 "La operación se realizó el %s.%n" +
                 "Por favor, verifique que la lista de participantes esté cargada correctamente.";
-        return getMensajeConId(formato, partidoId);
+        return getMensaje(formato, partidoId, true);
     }
 
     @Override
