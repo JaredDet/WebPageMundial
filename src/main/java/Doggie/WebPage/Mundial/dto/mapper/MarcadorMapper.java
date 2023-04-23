@@ -1,38 +1,45 @@
 package Doggie.WebPage.Mundial.dto.mapper;
 
 import Doggie.WebPage.Mundial.dto.MarcadorEquipo;
-import Doggie.WebPage.Mundial.modelo.entidad.Equipo;
+import Doggie.WebPage.Mundial.modelo.entidad.Participante;
 import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import org.mapstruct.Mapper;
 
 import java.util.List;
-import java.util.function.ToIntFunction;
+import java.util.function.IntSupplier;
 
 
 @Mapper(componentModel = "spring")
 
 public interface MarcadorMapper {
 
-
     default List<MarcadorEquipo> marcadorGolesFrom(Partido partido) {
-        return getMarcadores(partido, partido::golesEquipo);
+        return marcadorFrom(partido, true);
     }
 
     default List<MarcadorEquipo> marcadorPenalesFrom(Partido partido) {
-        return getMarcadores(partido, partido::penales);
+        return marcadorFrom(partido, false);
     }
 
-    private List<MarcadorEquipo> getMarcadores(Partido partido, ToIntFunction<Equipo> golesFunction) {
+    default List<MarcadorEquipo> marcadorFrom(Partido partido, boolean goles) {
+
         var equipos = partido.getEquiposParticipantes();
-        var local = equipos.get(0).getEquipo();
-        var visita = equipos.get(1).getEquipo();
+        var local = equipos.get(0);
+        var visita = equipos.get(1);
 
-        var golesLocal = golesFunction.applyAsInt(local);
-        var golesVisita = golesFunction.applyAsInt(visita);
+        IntSupplier calculaMarcadorLocal = goles ? local::goles : local::penales;
+        IntSupplier calculaMarcadorVisita = goles ? visita::goles : visita::penales;
 
-        var marcadorLocal = new MarcadorEquipo(local.getPais().getNombre(), golesLocal);
-        var marcadorVisita = new MarcadorEquipo(visita.getPais().getNombre(), golesVisita);
+        return getMarcador(local, visita, calculaMarcadorLocal, calculaMarcadorVisita);
+    }
+
+    default List<MarcadorEquipo> getMarcador(Participante local, Participante visita, IntSupplier calculaMarcadorLocal, IntSupplier calculaMarcadorVisita) {
+
+        var marcadorLocal = new MarcadorEquipo(local.getNombre(), calculaMarcadorLocal.getAsInt());
+        var marcadorVisita = new MarcadorEquipo(visita.getNombre(), calculaMarcadorVisita.getAsInt());
 
         return List.of(marcadorLocal, marcadorVisita);
     }
 }
+
+

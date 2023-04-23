@@ -5,5 +5,5 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public record Penales(List<PenalJugador> penales) {
+public record PenalesEquipo(String nombre, List<PenalJugador> penales) {
 }

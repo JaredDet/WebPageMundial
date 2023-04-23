@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 @Component
-@Slf4j
 public class PartidoCache {
     private final LoadingCache<Long, Partido> cache;
     private final CargaPartido cargaPartido;
@@ -29,7 +28,7 @@ public class PartidoCache {
         this.cache = Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)
                 .maximumSize(100)
-                .build(partidoId -> repositorioPartido.findById(partidoId).orElseThrow(() -> lanzarExcepcion(partidoId)));
+                .build(partidoId -> repositorioPartido.findById(partidoId).orElseThrow(() -> new PartidoNoEncontradoException(partidoId)));
         this.cargaPartido = cargaPartido;
     }
 
@@ -47,15 +46,9 @@ public class PartidoCache {
     public Partido getPartido(Long partidoId, List<DetallesPartido> detallesPartido) {
 
         var partido = Optional.of(cache.get(partidoId))
-                .orElseThrow(() -> lanzarExcepcion(partidoId));
+                .orElseThrow(() -> new PartidoNoEncontradoException(partidoId));
         cargaPartido.cargar(partido, detallesPartido);
         return partido;
-    }
-
-    private PartidoNoEncontradoException lanzarExcepcion(Long partidoId) {
-        var excepcion = new PartidoNoEncontradoException(partidoId);
-        log.error(excepcion.getMensajePersonalizado());
-        return excepcion;
     }
 }
 

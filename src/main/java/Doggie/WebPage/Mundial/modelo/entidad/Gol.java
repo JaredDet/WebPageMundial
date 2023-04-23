@@ -46,4 +46,12 @@ public class Gol {
     public boolean noEntro() {
         return !entro;
     }
+
+    public boolean esGolReglamentario() {
+        return minuto != null;
+    }
+
+    public boolean esGolTandaPenales() {
+        return !esGolReglamentario() && penal && entro;
+    }
 }

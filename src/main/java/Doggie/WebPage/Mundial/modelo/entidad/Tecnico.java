@@ -25,4 +25,8 @@ public class Tecnico {
     @JsonBackReference
     @ManyToOne
     private Pais pais;
+
+    public String pais() {
+        return pais.getNombre();
+    }
 }

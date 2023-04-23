@@ -2,6 +2,7 @@ package Doggie.WebPage.Mundial.controlador;
 
 import Doggie.WebPage.Mundial.dto.*;
 import Doggie.WebPage.Mundial.servicio.ServicioPartido;
+import Doggie.WebPage.Mundial.servicio.ServicioRegistroPartido;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class ControladorPartido {
 
     private final ServicioPartido servicioPartido;
+    private final ServicioRegistroPartido servicioRegistroPartido;
 
     /**
      * Recupera los datos de un partido a través del identificador del partido.
@@ -86,7 +88,7 @@ public class ControladorPartido {
      */
 
     @GetMapping("/{partidoId}/penales")
-    public List<Penales> penales(@PathVariable Long partidoId) {
+    public List<PenalesEquipo> penales(@PathVariable Long partidoId) {
         return servicioPartido.findPenalesByPartido(partidoId);
     }
 
@@ -101,4 +103,9 @@ public class ControladorPartido {
     public List<MarcadorEquipo> marcadorPenales(@PathVariable Long partidoId) {
         return servicioPartido.findMarcadorPenalesByPartido(partidoId);
     }
+
+        @PostMapping("/registrar")
+        public void registrarNuevoPartido(@RequestBody PartidoPeticion partido) {
+            servicioRegistroPartido.registrar(partido);
+        }
 }

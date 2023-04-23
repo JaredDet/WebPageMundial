@@ -35,7 +35,8 @@ public class CargaPartido {
                 DetallesPartido.GOLES, this::cargarGoles,
                 DetallesPartido.EQUIPOS, this::cargarEquipos,
                 DetallesPartido.JUGADORES, this::cargarJugadores,
-                DetallesPartido.ESTADISTICAS, this::cargarEstadisticas
+                DetallesPartido.ESTADISTICAS, this::cargarEstadisticas,
+                DetallesPartido.FASE, this::cargarFase
         );
         this.jugadorCache = jugadorCache;
     }
@@ -90,7 +91,7 @@ public class CargaPartido {
         }
 
         log.debug("Equipos del partido: {}", partido.getEquiposParticipantes()
-                .stream().map(equipo -> equipo.getEquipo().getPais().getNombre()).toList());
+                .stream().map(Participante::getNombre).toList());
     }
 
     /**
@@ -106,8 +107,8 @@ public class CargaPartido {
 
         if (!Hibernate.isInitialized(partido.getGoles())) {
             log.info("Cargando los goles del partido: {} VS {}",
-                    getNombreEquipo(partido.getEquiposParticipantes().get(0).getEquipo()),
-                    getNombreEquipo(partido.getEquiposParticipantes().get(1).getEquipo()));
+                    partido.getEquiposParticipantes().get(0).getNombre(),
+                    partido.getEquiposParticipantes().get(1).getNombre());
             Hibernate.initialize(partido.getGoles());
         }
         log.debug("Goles del partido: {}", partido.getGoles().stream().map(Gol::getMinuto).toList());
@@ -126,7 +127,7 @@ public class CargaPartido {
         verificarEquiposInicializados(partido);
 
         partido.getEquiposParticipantes().forEach(equipo -> {
-            log.info("Cargando las estadísticas del equipo: {}", equipo.getEquipo().getPais().getNombre());
+            log.info("Cargando las estadísticas del equipo: {}", equipo.getNombre());
             cargarEstadisticas(equipo);
             log.debug("Estadísticas: {}", equipo.getEstadisticas());
         });
@@ -148,9 +149,17 @@ public class CargaPartido {
         if (!Hibernate.isInitialized(partido.getConvocados())) {
             partido.getEquiposParticipantes().stream().map(Participante::getEquipo)
                     .forEach(equipo -> {
-                        log.debug("Cargando los jugadores del equipo: {}", equipo.getPais().getNombre());
+                        log.debug("Cargando los jugadores del equipo: {}", equipo.getNombre());
                         cargarJugadores(partido, equipo);
                     });
+        }
+    }
+
+    private void cargarFase(Partido partido) {
+
+        if (!Hibernate.isInitialized(partido.getFase())) {
+            log.info("Cargando la fase del partido");
+            Hibernate.initialize(partido.getFase());
         }
     }
 
@@ -181,10 +190,7 @@ public class CargaPartido {
     @SuppressWarnings("SpellCheckingInspection")
     private void verificarEquiposInicializados(Partido partido) {
         if (noSeHanCargadoLosEquipos(partido)) {
-            var excepcion = new EquiposNoInicializadosException(partido.getPartidoId());
-            var lineasMensaje = excepcion.getMensajePersonalizado().split("\\r?\\n");
-            Arrays.stream(lineasMensaje).forEach(log::error);
-            throw excepcion;
+            throw new EquiposNoInicializadosException(partido.getPartidoId());
         }
     }
 
@@ -198,10 +204,5 @@ public class CargaPartido {
     @SuppressWarnings("SpellCheckingInspection")
     private boolean noSeHanCargadoLosEquipos(Partido partido) {
         return !Hibernate.isInitialized(partido.getEquiposParticipantes());
-    }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    private String getNombreEquipo(Equipo equipo) {
-        return equipo.getPais().getNombre();
     }
 }

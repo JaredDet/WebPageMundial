@@ -18,7 +18,7 @@ public record DatosPartido(
         String fase,
         @JsonInclude(JsonInclude.Include.NON_EMPTY) List<DatosEstadistica> estadisticas,
         @JsonInclude(JsonInclude.Include.NON_EMPTY) List<MarcadorEquipo> marcadorPenales,
-        @JsonInclude(JsonInclude.Include.NON_EMPTY) List<Penales> penales) implements Comparable<DatosPartido> {
+        @JsonInclude(JsonInclude.Include.NON_EMPTY) List<PenalesEquipo> penales) implements Comparable<DatosPartido> {
 
     @Override
     public int compareTo(DatosPartido other) {

@@ -42,39 +42,6 @@ public class Equipo {
     @ManyToOne
     private Grupo grupo;
 
-    /**
-     * Determina si el equipo ha ganado el partido.
-     *
-     * @param partido el partido que se desea verificar.
-     * @return true si el equipo ha ganado el partido, false en caso contrario.
-     */
-
-    public boolean gana(Partido partido) {
-        return partido.golesEquipo(this) > partido.golesRival(this);
-    }
-
-    /**
-     * Determina si el equipo ha perdido el partido.
-     *
-     * @param partido el partido que se desea verificar.
-     * @return true si el equipo ha perdido, false en caso contrario.
-     */
-
-    public boolean pierde(Partido partido) {
-        return partido.golesEquipo(this) < partido.golesRival(this);
-    }
-
-    /**
-     * Determina si el equipo empató el partido o no.
-     *
-     * @param partido el partido en el que se quiere determinar si el equipo empató o no.
-     * @return true si el equipo empató el partido, false en caso contrario.
-     */
-
-    public boolean empata(Partido partido) {
-        return partido.golesEquipo(this) == partido.golesRival(this);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,5 +53,48 @@ public class Equipo {
     @Override
     public int hashCode() {
         return Objects.hash(getEquipoId());
+    }
+
+    public int ganados() {
+        return (int) partidosParticipados
+                .stream()
+                .filter(Participante::gana)
+                .count();
+    }
+
+    public int perdidos() {
+        return (int) partidosParticipados
+                .stream()
+                .filter(Participante::pierde)
+                .count();
+    }
+
+    public int empatados() {
+        return (int) partidosParticipados
+                .stream()
+                .filter(Participante::empata)
+                .count();
+    }
+
+    public int goles() {
+        return partidosParticipados
+                .stream()
+                .mapToInt(Participante::goles)
+                .sum();
+    }
+
+    public int golesEnContra() {
+        return partidosParticipados
+                .stream()
+                .mapToInt(Participante::golesEnContra)
+                .sum();
+    }
+
+    public String getNombre() {
+        return pais.getNombre();
+    }
+
+    public String grupo() {
+        return grupo.getNombre();
     }
 }

@@ -16,11 +16,24 @@ public class ServicioRonda {
     private final RondaCache rondaCache;
     private final RondaMapper rondaMapper;
 
+    /**
+     * Obtiene una lista de resúmenes de partidos correspondientes a una fase especificada.
+     *
+     * @param faseId el ID de la fase de la que se desean obtener los resúmenes de partidos.
+     * @return una lista de resúmenes de partidos correspondientes a la fase especificada.
+     */
+
     @Transactional
     public List<ResumenPartido> findByFase(Long faseId) {
         var partidos = rondaCache.getPartidosByFaseId(faseId);
         return rondaMapper.from(partidos);
     }
+
+    /**
+     * Obtiene una lista de resúmenes de partidos correspondientes a la fase final del mundial.
+     *
+     * @return una lista de resúmenes de todos los partidos desde octavos de final hasta la final.
+     */
 
     @Transactional
     public List<ResumenPartido> findRondaFinal() {

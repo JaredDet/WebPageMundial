@@ -64,7 +64,7 @@ public abstract class RecursoException extends RuntimeException {
      * @return El código de estado HTTP correspondiente.
      */
 
-    protected abstract HttpStatus getHttpStatus();
+    public abstract HttpStatus getHttpStatus();
 
     /**
      * Método que construye el mensaje de error que se mostrará al usuario.
@@ -76,8 +76,14 @@ public abstract class RecursoException extends RuntimeException {
      * @return Mensaje de error personalizado para la excepción concreta.
      */
 
+    public abstract String getMensajePersonalizado();
+
     protected String getMensaje(String formato) {
         return String.format(formato, recurso, motivo, fechaOperacion);
+    }
+
+    protected String getMensaje(String formato, String nombre) {
+        return String.format(formato, recurso, nombre, motivo, fechaOperacion);
     }
 
     protected String getMensaje(String formato, Long id, boolean tieneRecurso) {

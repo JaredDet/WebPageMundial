@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 @Component
-@Slf4j
 public class RondaCache {
 
     private final LoadingCache<Long, List<Partido>> cache;
@@ -39,24 +38,16 @@ public class RondaCache {
     @Transactional(propagation = REQUIRES_NEW)
     public List<Partido> getPartidosByFaseId(Long faseId) {
         var partidos = Optional.ofNullable(cache.get(faseId))
-                .orElseThrow(() -> {
-                    var excepcion = new PartidosNoEncontradosPorGrupoException(faseId);
-                    log.error(excepcion.getMensajePersonalizado());
-                    return excepcion;
-                });
-        cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES));
+                .orElseThrow(() -> new PartidosNoEncontradosPorGrupoException(faseId));
+        cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES, DetallesPartido.FASE));
         return partidos;
     }
 
     @Transactional(propagation = REQUIRES_NEW)
     public List<Partido> getRondaFinal() {
         var partidos = Optional.ofNullable(cache.get(0L))
-                .orElseThrow(() -> {
-                    var excepcion = new PartidosNoEncontradosPorGrupoException(0L);
-                    log.error(excepcion.getMensajePersonalizado());
-                    return excepcion;
-                });
-        cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES));
+                .orElseThrow(() -> new PartidosNoEncontradosPorGrupoException(0L));
+        cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES, DetallesPartido.FASE));
         return partidos;
     }
 }

@@ -1,15 +1,20 @@
 package Doggie.WebPage.Mundial.dto.mapper;
 
 import Doggie.WebPage.Mundial.dto.GolesEquipo;
-import Doggie.WebPage.Mundial.modelo.entidad.Equipo;
+import Doggie.WebPage.Mundial.modelo.entidad.Participante;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = GolesJugadorMapper.class)
 
 public interface GolesEquipoMapper {
 
-    @Mapping(target = "nombre", source = "pais.nombre")
-    @Mapping(target = "goles", source = "jugadores")
-    GolesEquipo from(Equipo equipo);
+    GolesJugadorMapper golesJugadorMapper = new GolesJugadorMapperImpl();
+    List<GolesEquipo> from(List<Participante> equipos);
+
+    default GolesEquipo from(Participante equipo) {
+        var goles = golesJugadorMapper.from(equipo.getAnotadores(), equipo.getPartido());
+        return new GolesEquipo(equipo.getNombre(), goles);
+    }
 }

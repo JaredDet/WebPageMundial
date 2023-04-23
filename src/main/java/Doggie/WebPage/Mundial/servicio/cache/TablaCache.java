@@ -39,11 +39,7 @@ public class TablaCache {
     public List<Partido> getPartidosByGrupoId(Long grupoId) {
 
         var partidos = Optional.ofNullable(cache.get(grupoId))
-                .orElseThrow(() -> {
-                    var excepcion = new PartidosNoEncontradosPorGrupoException(grupoId);
-                    log.error(excepcion.getMensajePersonalizado());
-                    return excepcion;
-                });
+                .orElseThrow(() -> new PartidosNoEncontradosPorGrupoException(grupoId));
 
         cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES));
         return partidos;
@@ -52,11 +48,7 @@ public class TablaCache {
     @Transactional(propagation = REQUIRES_NEW)
     public List<Partido> getFaseGrupos() {
         var partidos = Optional.ofNullable(cache.get(0L))
-                .orElseThrow(() -> {
-                    var excepcion = new PartidosNoEncontradosPorGrupoException(0L);
-                    log.error(excepcion.getMensajePersonalizado());
-                    return excepcion;
-                });
+                .orElseThrow(() -> new PartidosNoEncontradosPorGrupoException(0L));
         cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES));
         return partidos;
     }

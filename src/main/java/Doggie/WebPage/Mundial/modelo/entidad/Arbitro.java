@@ -24,4 +24,8 @@ public class Arbitro {
     @JsonBackReference
     @ManyToOne
     private Pais pais;
+
+    public String pais() {
+        return pais.getNombre();
+    }
 }

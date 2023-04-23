@@ -8,8 +8,6 @@ import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import org.mapstruct.Mapper;
 
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
 
 @Mapper(componentModel = "spring")
 public interface TablaMapper {
@@ -18,44 +16,37 @@ public interface TablaMapper {
         var equipos = grupo.getEquipos();
         var tablas = equipos.stream()
                 .map(equipo -> {
-                    var partidosEquipo = filter(partidos, equipo);
-                    return from(equipo, partidosEquipo);
+                    actualizarPartidosJugados(equipo, partidos);
+                    return from(equipo);
                 }).sorted().toList();
 
         return new Tabla(grupo.getNombre(), tablas);
     }
 
-    default TablaEquipo from(Equipo equipo, List<Partido> partidos) {
+    default TablaEquipo from(Equipo equipo) {
 
-        int jugados = partidos.size();
+        int jugados = equipo.getPartidosParticipados().size();
 
-        var ganados = calcular(partidos, equipo::gana);
-        var perdidos = calcular(partidos, equipo::pierde);
-        var empatados = calcular(partidos, equipo::empata);
+        var ganados = equipo.ganados();
+        var perdidos = equipo.perdidos();
+        var empatados = equipo.empatados();
 
-        var golesAFavor = calcularNumeroGoles(partidos, partido -> partido.golesEquipo(equipo));
-        var golesEnContra = calcularNumeroGoles(partidos, partido -> partido.golesRival(equipo));
+        var golesAFavor = equipo.goles();
+        var golesEnContra = equipo.golesEnContra();
 
         int puntos = (ganados * 3) + (empatados);
         int diferenciaGoles = golesAFavor - golesEnContra;
 
-        return new TablaEquipo(equipo.getPais().getNombre(), jugados, ganados,
+        return new TablaEquipo(equipo.getNombre(), jugados, ganados,
                 perdidos, empatados, golesAFavor, golesEnContra, diferenciaGoles, puntos);
     }
 
-    default int calcular(List<Partido> partidos, Predicate<Partido> predicado) {
-        return (int) partidos.stream()
-                .filter(predicado).count();
-    }
+    default void actualizarPartidosJugados(Equipo equipo, List<Partido> partidos) {
 
-    default int calcularNumeroGoles(List<Partido> partidos, ToIntFunction<Partido> funcion) {
-        return partidos.stream().mapToInt(funcion).sum();
-    }
-
-    default List<Partido> filter(List<Partido> partidos, Equipo equipo) {
-       return partidos.stream()
-                .filter(partido -> partido.getEquiposParticipantes()
-                        .stream().anyMatch(participante -> participante.getEquipo()
-                                .equals(equipo))).toList();
+        var participacionesGrupo = equipo.getPartidosParticipados().stream()
+                .filter(participacion -> partidos.stream()
+                        .anyMatch(partido -> participacion.getPartido().equals(partido)))
+                .toList();
+        equipo.setPartidosParticipados(participacionesGrupo);
     }
 }

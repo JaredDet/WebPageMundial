@@ -34,7 +34,7 @@ public class PartidosNoEncontradosPorGrupoException extends RecursoException {
     }
 
     @Override
-    protected HttpStatus getHttpStatus() {
+    public HttpStatus getHttpStatus() {
         return HttpStatus.NOT_FOUND;
     }
 }

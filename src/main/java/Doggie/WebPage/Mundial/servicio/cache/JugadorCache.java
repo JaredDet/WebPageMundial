@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
-@Slf4j
 @Component
 public class JugadorCache {
     private final LoadingCache<@NonNull CacheKey, @NonNull List<Jugador>> cache;
@@ -45,11 +44,7 @@ public class JugadorCache {
     public List<Jugador> getJugadores(Long equipoId, Long partidoId) {
         CacheKey key = new CacheKey(equipoId, partidoId);
         var jugadores = Optional.of(cache.get(key))
-                .orElseThrow(() -> {
-                    var excepcion = new JugadoresNoEncontradosException(partidoId, equipoId);
-                    log.error(excepcion.getMensajePersonalizado());
-                    return excepcion;
-                });
+                .orElseThrow(() -> new JugadoresNoEncontradosException(partidoId, equipoId));
         cargaJugador.cargar(jugadores, List.of(DetallesJugador.CONVOCACIONES, DetallesJugador.SUSTITUCIONES, DetallesJugador.TARJETAS, DetallesJugador.GOLES));
         return jugadores;
     }

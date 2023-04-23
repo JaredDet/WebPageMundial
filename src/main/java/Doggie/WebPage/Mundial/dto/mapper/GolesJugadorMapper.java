@@ -4,6 +4,7 @@ import Doggie.WebPage.Mundial.dto.DatosGol;
 import Doggie.WebPage.Mundial.dto.GolesJugador;
 import Doggie.WebPage.Mundial.modelo.entidad.Gol;
 import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
+import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -14,15 +15,19 @@ import java.util.List;
 
 public interface GolesJugadorMapper {
 
-    @Mapping(target = "goles", source = "goles", qualifiedByName = "goles")
-    GolesJugador from(Jugador jugador);
+    default List<GolesJugador> from(List<Jugador> jugadores, Partido partido) {
+        return jugadores.stream().map(jugador -> from(jugador, partido)).toList();
+    }
 
-    @Named("goles")
-    default List<DatosGol> goles(List<Gol> golesJugador) {
-        return golesJugador.stream()
-                .filter(gol -> gol.getMinuto() != null)
-                .map(gol -> new DatosGol(gol.getMinuto(),
-                        gol.isPenal()))
+    default GolesJugador from(Jugador jugador, Partido partido) {
+        var goles = jugador.getGolesPorPartido(partido);
+        return new GolesJugador(jugador.getNombre(), from(goles));
+    }
+
+    default List<DatosGol> from(List<Gol> goles) {
+        return goles.stream()
+                .filter(Gol::esGolReglamentario)
+                .map(gol -> new DatosGol(gol.getMinuto(), gol.isPenal()))
                 .toList();
     }
 }

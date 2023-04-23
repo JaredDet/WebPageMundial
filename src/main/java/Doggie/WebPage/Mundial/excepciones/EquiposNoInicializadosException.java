@@ -22,7 +22,7 @@ public class EquiposNoInicializadosException extends RecursoException {
     }
 
     @Override
-    protected HttpStatus getHttpStatus() {
+    public HttpStatus getHttpStatus() {
         return HttpStatus.INTERNAL_SERVER_ERROR;
     }
 }

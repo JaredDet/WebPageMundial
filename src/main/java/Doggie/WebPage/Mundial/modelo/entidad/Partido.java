@@ -1,5 +1,6 @@
 package Doggie.WebPage.Mundial.modelo.entidad;
 
+import Doggie.WebPage.Mundial.modelo.Color;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import java.util.function.Predicate;
 @Table(name = "partidos")
 @Getter
 @Setter
-@ToString(exclude = {"equiposParticipantes", "convocados", "goles", "sustituciones"})
+@ToString(exclude = {"equiposParticipantes", "convocados", "goles", "sustituciones", "tarjetas"})
 public class Partido {
 
     @Id
@@ -33,20 +34,24 @@ public class Partido {
     private boolean tandaPenales;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participante> equiposParticipantes;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Convocado> convocados;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Gol> goles;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sustitucion> sustituciones;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tarjeta> tarjetas;
 
     @JsonBackReference
     @OneToOne
@@ -59,6 +64,24 @@ public class Partido {
     @JsonBackReference
     @ManyToOne
     private Fase fase;
+
+    public int tarjetasEquipo(Equipo equipo, Color color) {
+        var tarjetasEquipo = tarjetasEquipo(equipo);
+        return (int) tarjetasEquipo
+                .stream()
+                .filter(tarjeta -> tarjeta.getColor()
+                        .equals(color))
+                .count();
+    }
+
+    private List<Tarjeta> tarjetasEquipo(Equipo equipo) {
+        return tarjetas.stream()
+                .filter(tarjeta -> tarjeta.getJugador()
+                        .getEquipo()
+                        .getEquipoId()
+                        .equals(equipo.getEquipoId()))
+                .toList();
+    }
 
     /**
      * Devuelve la cantidad total de goles anotados por un equipo en el torneo,
@@ -144,6 +167,14 @@ public class Partido {
                 .filter(participante -> participante.getEquipo() != equipo)
                 .findFirst()
                 .map(Participante::getEquipo);
+    }
+
+    public List<Jugador> jugadoresEquipo(Equipo equipo) {
+        return convocados.stream()
+                .map(Convocado::getJugador)
+                .filter(jugador -> jugador.getEquipo().getEquipoId()
+                        .equals(equipo.getEquipoId()))
+                .toList();
     }
 
     @Override

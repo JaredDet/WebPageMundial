@@ -17,10 +17,10 @@ public record JugadorEnfrentamiento(String nombre, int dorsal,
     public static final Map<String, Integer> VALORES_POSICIONES = new HashMap<>();
 
     static {
-        VALORES_POSICIONES.put("POR", 4);
-        VALORES_POSICIONES.put("DEF", 3);
-        VALORES_POSICIONES.put("MED", 2);
-        VALORES_POSICIONES.put("DEL", 1);
+        VALORES_POSICIONES.put("POR", 1);
+        VALORES_POSICIONES.put("DEF", 2);
+        VALORES_POSICIONES.put("MED", 3);
+        VALORES_POSICIONES.put("DEL", 4);
     }
 
 

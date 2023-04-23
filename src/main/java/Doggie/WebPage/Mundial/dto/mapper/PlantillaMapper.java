@@ -16,27 +16,27 @@ public interface PlantillaMapper {
 
     JugadorEnfrentamientoMapper jugadorEnfrentamientoMapper = new JugadorEnfrentamientoMapperImpl();
 
-    default Plantilla from(Equipo equipo) {
-
-        var participante = equipo.getPartidosParticipados().get(0);
-
-        var jugadores = jugadorEnfrentamientoMapper.from(equipo.getJugadores());
-
-        sort(jugadores);
-
-        var titulares = jugadores.stream().filter(JugadorEnfrentamiento::esTitular).toList();
-        var plantillaTitular = from(titulares);
-
-        var banca = jugadores.stream().filter(jugador -> !jugador.esTitular()).toList();
-        var plantillaBanca = from(banca);
-
-        var entrenador = equipo.getTecnico();
-        var tecnico = new DatosTecnico(entrenador.getNombre(), entrenador.getPais().getNombre());
-
-        return new Plantilla(equipo.getPais().getNombre(), plantillaTitular, plantillaBanca, participante.isEsLocal(), !participante.isEsLocal(), tecnico);
+    default List<Plantilla> from(List<Participante> equipos) {
+        return equipos.stream().map(this::from).toList();
     }
 
-    default List<JugadorPlantilla> from(List<JugadorEnfrentamiento> jugadores) {
+    default Plantilla from(Participante equipo) {
+
+        var jugadores = jugadorEnfrentamientoMapper.from(equipo.getJugadores(), equipo.getPartido());
+
+        var titulares = jugadores.stream().filter(JugadorEnfrentamiento::esTitular).toList();
+        var plantillaTitular = fromJugadores(titulares);
+
+        var banca = jugadores.stream().filter(jugador -> !jugador.esTitular()).toList();
+        var plantillaBanca = fromJugadores(banca);
+
+        var entrenador = equipo.tecnico();
+        var tecnico = new DatosTecnico(entrenador.getNombre(), entrenador.pais());
+
+        return new Plantilla(equipo.getNombre(), plantillaTitular, plantillaBanca, equipo.isEsLocal(), !equipo.isEsLocal(), tecnico);
+    }
+
+    default List<JugadorPlantilla> fromJugadores(List<JugadorEnfrentamiento> jugadores) {
         return jugadores.stream().map(this::from).toList();
     }
 

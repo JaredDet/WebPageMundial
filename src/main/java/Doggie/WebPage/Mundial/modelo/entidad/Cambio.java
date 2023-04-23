@@ -30,4 +30,8 @@ public class Cambio {
 
     @Column(columnDefinition = "boolean default true")
     private boolean entra;
+
+    public Partido getPartido() {
+        return sustitucion.getPartido();
+    }
 }

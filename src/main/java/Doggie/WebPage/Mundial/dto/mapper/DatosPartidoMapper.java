@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface DatosPartidoMapper {
 
-    default DatosPartido from(List<Plantilla> plantillas, List<MarcadorEquipo> marcador, List<GolesEquipo> equiposGoles, Partido partido, List<DatosEstadistica> estadisticas, List<MarcadorEquipo> marcadorPenales, List<Penales> penales) {
+    default DatosPartido from(List<Plantilla> plantillas, List<MarcadorEquipo> marcador, List<GolesEquipo> equiposGoles, Partido partido, List<DatosEstadistica> estadisticas, List<MarcadorEquipo> marcadorPenales, List<PenalesEquipo> penales) {
 
         var datosArbitro = getDatosArbitro(partido.getArbitro());
         var fase = partido.getFase().getNombre();
@@ -31,6 +31,6 @@ public interface DatosPartidoMapper {
     }
 
     private DatosArbitro getDatosArbitro(Arbitro arbitro) {
-        return new DatosArbitro(arbitro.getNombre(), arbitro.getPais().getNombre());
+        return new DatosArbitro(arbitro.getNombre(), arbitro.pais());
     }
 }
