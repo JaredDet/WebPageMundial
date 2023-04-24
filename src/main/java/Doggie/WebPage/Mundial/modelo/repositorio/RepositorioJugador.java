@@ -23,6 +23,23 @@ public interface RepositorioJugador extends JpaRepository<Jugador, Long> {
             "AND Convocados.Partido_partido_id = ?2 " +
             "AND Convocados.Jugador_jugador_id IS NOT NULL", nativeQuery = true)
     List<Jugador> findJugadoresConvocadosByEquipoYPartido(Long equipoId, Long partidoId);
+
+    @Query(value = "SELECT jugadores.* FROM Jugadores " +
+            "INNER JOIN Goles " +
+            "ON Goles.Jugador_jugador_id = Jugadores.jugador_id " +
+            "GROUP BY Jugadores.jugador_id " +
+            "ORDER BY COUNT(Goles.gol_id) " +
+            "DESC LIMIT 1", nativeQuery = true)
+    Jugador findJugadorConMasGoles();
+
+    @Query(value = "SELECT jugadores.* FROM Jugadores " +
+            "INNER JOIN Convocados " +
+            "ON Convocados.Jugador_jugador_id = Jugadores.jugador_id " +
+            "WHERE Convocados.es_jugador_partido = true " +
+            "GROUP BY Jugadores.jugador_id " +
+            "ORDER BY COUNT(Convocados.convocado_id) " +
+            "DESC LIMIT 1", nativeQuery = true)
+    Jugador findJugadorConMasMVP();
 }
 
 

@@ -52,6 +52,6 @@ public class Gol {
     }
 
     public boolean esGolTandaPenales() {
-        return !esGolReglamentario() && penal && entro;
+        return !esGolReglamentario() && penal;
     }
 }

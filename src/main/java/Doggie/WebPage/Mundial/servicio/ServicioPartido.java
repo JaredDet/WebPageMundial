@@ -2,12 +2,12 @@ package Doggie.WebPage.Mundial.servicio;
 
 import Doggie.WebPage.Mundial.dto.*;
 import Doggie.WebPage.Mundial.dto.mapper.*;
+import Doggie.WebPage.Mundial.modelo.DetallesJugador;
 import Doggie.WebPage.Mundial.modelo.DetallesPartido;
 import Doggie.WebPage.Mundial.modelo.entidad.*;
 import Doggie.WebPage.Mundial.servicio.cache.PartidoCache;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
@@ -17,7 +17,6 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 
 public class ServicioPartido {
 
@@ -40,7 +39,9 @@ public class ServicioPartido {
 
     public DatosPartido datosPartido(Long partidoId) {
 
-        var partido = findPartido(partidoId, List.of(DetallesPartido.EQUIPOS, DetallesPartido.JUGADORES, DetallesPartido.GOLES, DetallesPartido.ESTADISTICAS));
+        var partido = findPartido(partidoId,
+                List.of(DetallesPartido.EQUIPOS, DetallesPartido.JUGADORES, DetallesPartido.GOLES, DetallesPartido.ESTADISTICAS, DetallesPartido.CONVOCADOS, DetallesPartido.TARJETAS),
+                List.of(DetallesJugador.CONVOCACIONES, DetallesJugador.TARJETAS, DetallesJugador.GOLES, DetallesJugador.SUSTITUCIONES));
 
         var plantillas = findPlantillasByPartido(partido);
         var goles = findGolesByPartido(partido);
@@ -64,7 +65,9 @@ public class ServicioPartido {
      */
 
     public List<Plantilla> findPlantillasByPartido(Long partidoId) {
-        return findByPartido(partidoId, this::findPlantillasByPartido, List.of(DetallesPartido.EQUIPOS, DetallesPartido.JUGADORES));
+        return findByPartido(partidoId, this::findPlantillasByPartido, List.of(DetallesPartido.EQUIPOS,
+                        DetallesPartido.JUGADORES, DetallesPartido.CONVOCADOS),
+                List.of(DetallesJugador.CONVOCACIONES, DetallesJugador.TARJETAS, DetallesJugador.SUSTITUCIONES));
     }
 
     /**
@@ -75,7 +78,9 @@ public class ServicioPartido {
      */
 
     public List<GolesEquipo> findGolesByPartido(Long partidoId) {
-        return findByPartido(partidoId, this::findGolesByPartido, List.of(DetallesPartido.EQUIPOS, DetallesPartido.JUGADORES, DetallesPartido.GOLES));
+        return findByPartido(partidoId, this::findGolesByPartido,
+                List.of(DetallesPartido.EQUIPOS, DetallesPartido.JUGADORES, DetallesPartido.CONVOCADOS),
+                List.of(DetallesJugador.GOLES));
     }
 
     /**
@@ -86,7 +91,9 @@ public class ServicioPartido {
      */
 
     public List<PenalesEquipo> findPenalesByPartido(Long partidoId) {
-        return findByPartido(partidoId, this::findPenalesByPartido, List.of(DetallesPartido.EQUIPOS, DetallesPartido.JUGADORES, DetallesPartido.GOLES));
+        return findByPartido(partidoId, this::findPenalesByPartido,
+                List.of(DetallesPartido.EQUIPOS, DetallesPartido.JUGADORES, DetallesPartido.CONVOCADOS),
+                List.of(DetallesJugador.GOLES));
     }
 
     /**
@@ -97,7 +104,9 @@ public class ServicioPartido {
      */
 
     public List<MarcadorEquipo> findMarcadorByPartido(Long partidoId) {
-        return findByPartido(partidoId, this::findMarcadorByPartido, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES));
+        return findByPartido(partidoId, this::findMarcadorByPartido,
+                List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES),
+                List.of());
     }
 
     /**
@@ -108,7 +117,9 @@ public class ServicioPartido {
      */
 
     public List<MarcadorEquipo> findMarcadorPenalesByPartido(Long partidoId) {
-        return findByPartido(partidoId, this::findMarcadorPenalesByPartido, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES));
+        return findByPartido(partidoId, this::findMarcadorPenalesByPartido,
+                List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES),
+                List.of());
     }
 
     /**
@@ -120,7 +131,8 @@ public class ServicioPartido {
 
     public List<DatosEstadistica> findDatosEstadisticasByPartido(Long partidoId) {
         return findByPartido(partidoId, this::findDatosEstadisticasByPartido,
-                List.of(DetallesPartido.EQUIPOS, DetallesPartido.JUGADORES, DetallesPartido.ESTADISTICAS));
+                List.of(DetallesPartido.EQUIPOS, DetallesPartido.ESTADISTICAS, DetallesPartido.TARJETAS),
+                List.of());
     }
 
     /**
@@ -202,21 +214,21 @@ public class ServicioPartido {
      * @return una lista de elementos que pertenecen al partido especificado.
      */
 
-    private <T> List<T> findByPartido(Long partidoId, Function<Partido, List<T>> findByPartido, List<DetallesPartido> detallesBusqueda) {
-        var partido = findPartido(partidoId, detallesBusqueda);
+    private <T> List<T> findByPartido(Long partidoId, Function<Partido, List<T>> findByPartido, List<DetallesPartido> detallesBusqueda, List<DetallesJugador> detallesJugadores) {
+        var partido = findPartido(partidoId, detallesBusqueda, detallesJugadores);
         return findByPartido.apply(partido);
     }
 
     /**
      * Obtiene un partido cargado desde la caché con sus recursos o lo busca en la base de datos.
      *
-     * @param partidoId el ID del partido del que se desea obtener.
-     * @param detallesBusqueda una lista con el nombre de los recursos que se quieren cargar.
+     * @param partidoId               el ID del partido del que se desea obtener.
+     * @param detallesBusquedaPartido una lista con el nombre de los recursos que se quieren cargar.
      * @return un partido con sus recursos cargados.
      */
 
     @Transactional
-    private Partido findPartido(Long partidoId, List<DetallesPartido> detallesBusqueda) {
-        return partidoCache.getPartido(partidoId, detallesBusqueda);
+    private Partido findPartido(Long partidoId, List<DetallesPartido> detallesBusquedaPartido, List<DetallesJugador> detallesBusquedaJugador) {
+        return partidoCache.getPartido(partidoId, detallesBusquedaPartido, detallesBusquedaJugador);
     }
 }

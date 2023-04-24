@@ -89,7 +89,6 @@ public class Equipo {
                 .mapToInt(Participante::golesEnContra)
                 .sum();
     }
-
     public String getNombre() {
         return pais.getNombre();
     }

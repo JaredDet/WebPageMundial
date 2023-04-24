@@ -41,11 +41,11 @@ public class JugadorCache {
     }
 
     @Transactional(propagation = REQUIRES_NEW)
-    public List<Jugador> getJugadores(Long equipoId, Long partidoId) {
+    public List<Jugador> getJugadores(Long equipoId, Long partidoId, List<DetallesJugador> detallesBusqueda) {
         CacheKey key = new CacheKey(equipoId, partidoId);
         var jugadores = Optional.of(cache.get(key))
                 .orElseThrow(() -> new JugadoresNoEncontradosException(partidoId, equipoId));
-        cargaJugador.cargar(jugadores, List.of(DetallesJugador.CONVOCACIONES, DetallesJugador.SUSTITUCIONES, DetallesJugador.TARJETAS, DetallesJugador.GOLES));
+        cargaJugador.cargar(jugadores, detallesBusqueda);
         return jugadores;
     }
 

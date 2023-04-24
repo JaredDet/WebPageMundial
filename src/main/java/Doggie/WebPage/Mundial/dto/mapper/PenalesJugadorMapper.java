@@ -23,6 +23,6 @@ public interface PenalesJugadorMapper {
 
         var penal = goles.stream().filter(Gol::esGolTandaPenales).findFirst();
 
-        return penal.map(gol -> new PenalJugador(jugador.getNombre(), gol.isEntro())).orElse(null);
+        return penal.map(gol -> new PenalJugador(jugador.getNombre(), gol.isEntro(), !gol.isEntro())).orElse(null);
     }
 }

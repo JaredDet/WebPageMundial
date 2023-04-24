@@ -93,6 +93,13 @@ public class Jugador {
                         .equals(partido.getPartidoId()))
                 .findFirst().orElse(null);
     }
+
+    public int getVecesJugadorPartido() {
+        return (int) convocaciones
+                .stream()
+                .map(Convocado::isEsJugadorPartido)
+                .count();
+    }
 }
 
 

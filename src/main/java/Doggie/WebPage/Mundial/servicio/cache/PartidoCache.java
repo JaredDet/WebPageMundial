@@ -1,6 +1,7 @@
 package Doggie.WebPage.Mundial.servicio.cache;
 
 import Doggie.WebPage.Mundial.excepciones.PartidoNoEncontradoException;
+import Doggie.WebPage.Mundial.modelo.DetallesJugador;
 import Doggie.WebPage.Mundial.modelo.DetallesPartido;
 import Doggie.WebPage.Mundial.modelo.entidad.*;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioPartido;
@@ -43,11 +44,11 @@ public class PartidoCache {
      */
 
     @Transactional(propagation = REQUIRES_NEW)
-    public Partido getPartido(Long partidoId, List<DetallesPartido> detallesPartido) {
+    public Partido getPartido(Long partidoId, List<DetallesPartido> detallesPartido, List<DetallesJugador> detallesJugadores) {
 
         var partido = Optional.of(cache.get(partidoId))
                 .orElseThrow(() -> new PartidoNoEncontradoException(partidoId));
-        cargaPartido.cargar(partido, detallesPartido);
+        cargaPartido.cargar(partido, detallesPartido, detallesJugadores);
         return partido;
     }
 }

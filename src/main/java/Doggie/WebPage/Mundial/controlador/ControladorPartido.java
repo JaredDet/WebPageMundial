@@ -104,8 +104,8 @@ public class ControladorPartido {
         return servicioPartido.findMarcadorPenalesByPartido(partidoId);
     }
 
-        @PostMapping("/registrar")
-        public void registrarNuevoPartido(@RequestBody PartidoPeticion partido) {
-            servicioRegistroPartido.registrar(partido);
-        }
+    @PostMapping("/registrar")
+    public void registrarNuevoPartido(@RequestBody PartidoPeticion partido) {
+        servicioRegistroPartido.registrar(partido);
+    }
 }

@@ -8,7 +8,6 @@ import Doggie.WebPage.Mundial.modelo.entidad.Jugador;
 import Doggie.WebPage.Mundial.modelo.entidad.Partido;
 import Doggie.WebPage.Mundial.modelo.repositorio.RepositorioEquipo;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

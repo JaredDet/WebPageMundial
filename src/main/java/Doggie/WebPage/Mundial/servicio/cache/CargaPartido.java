@@ -1,6 +1,7 @@
 package Doggie.WebPage.Mundial.servicio.cache;
 
 import Doggie.WebPage.Mundial.excepciones.EquiposNoInicializadosException;
+import Doggie.WebPage.Mundial.modelo.DetallesJugador;
 import Doggie.WebPage.Mundial.modelo.DetallesPartido;
 import Doggie.WebPage.Mundial.modelo.entidad.Equipo;
 import Doggie.WebPage.Mundial.modelo.entidad.Gol;
@@ -14,11 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
 
 @SuppressWarnings("SpellCheckingInspection")
 @Slf4j
@@ -26,17 +25,19 @@ import java.util.function.Consumer;
 public class CargaPartido {
 
     @SuppressWarnings("SpellCheckingInspection")
-    private final Map<DetallesPartido, Consumer<Partido>> detallesMap;
     private final JugadorCache jugadorCache;
+    private final Map<DetallesPartido, Consumer<Partido>> detallesMap;
+
 
     @Autowired
     public CargaPartido(JugadorCache jugadorCache) {
         this.detallesMap = Map.of(
                 DetallesPartido.GOLES, this::cargarGoles,
                 DetallesPartido.EQUIPOS, this::cargarEquipos,
-                DetallesPartido.JUGADORES, this::cargarJugadores,
-                DetallesPartido.ESTADISTICAS, this::cargarEstadisticas,
-                DetallesPartido.FASE, this::cargarFase
+                DetallesPartido.CONVOCADOS, this::cargarConvocados,
+                DetallesPartido.TARJETAS, this::cargarTarjetas,
+                DetallesPartido.FASE, this::cargarFase,
+                DetallesPartido.ESTADISTICAS, this::cargarEstadisticas
         );
         this.jugadorCache = jugadorCache;
     }
@@ -50,8 +51,8 @@ public class CargaPartido {
 
     @SuppressWarnings("SpellCheckingInspection")
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public void cargar(List<Partido> partidos, List<DetallesPartido> detallesBuscados) {
-        partidos.forEach(partido -> cargar(partido, detallesBuscados));
+    public void cargar(List<Partido> partidos, List<DetallesPartido> detallesBuscados, List<DetallesJugador> detallesJugadores) {
+        partidos.forEach(partido -> cargar(partido, detallesBuscados, detallesJugadores));
     }
 
     /**
@@ -64,7 +65,7 @@ public class CargaPartido {
 
     @SuppressWarnings("SpellCheckingInspection")
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public void cargar(Partido partido, List<DetallesPartido> detallesBuscados) {
+    public void cargar(Partido partido, List<DetallesPartido> detallesBuscados, List<DetallesJugador> detallesJugadores) {
         if (detallesBuscados == null || detallesBuscados.isEmpty()) {
             throw new IllegalArgumentException("La lista de detalles buscados no puede ser null o estar vacía");
         }
@@ -73,6 +74,10 @@ public class CargaPartido {
             var cargador = detallesMap.get(detalle);
             cargador.accept(partido);
         });
+
+        if (detallesBuscados.contains(DetallesPartido.JUGADORES)) {
+            cargarJugadores(partido, detallesJugadores);
+        }
     }
 
     /**
@@ -133,6 +138,23 @@ public class CargaPartido {
         });
     }
 
+    private void cargarConvocados(Partido partido) {
+
+        partido.getConvocados().forEach(convocado -> {
+            if (!Hibernate.isInitialized(partido.getConvocados())) {
+                Hibernate.initialize(partido.getConvocados());
+            }
+        });
+    }
+
+    private void cargarTarjetas(Partido partido) {
+        partido.getTarjetas().forEach(convocado -> {
+            if (!Hibernate.isInitialized(partido.getTarjetas())) {
+                Hibernate.initialize(partido.getTarjetas());
+            }
+        });
+    }
+
     /**
      * Carga los jugadores de un partido y los inicializa si aún no han sido cargados.
      *
@@ -142,7 +164,7 @@ public class CargaPartido {
 
 
     @SuppressWarnings("SpellCheckingInspection")
-    private void cargarJugadores(Partido partido) {
+    private void cargarJugadores(Partido partido, List<DetallesJugador> detallesJugadores) {
 
         verificarEquiposInicializados(partido);
 
@@ -150,7 +172,7 @@ public class CargaPartido {
             partido.getEquiposParticipantes().stream().map(Participante::getEquipo)
                     .forEach(equipo -> {
                         log.debug("Cargando los jugadores del equipo: {}", equipo.getNombre());
-                        cargarJugadores(partido, equipo);
+                        cargarJugadores(partido, equipo, detallesJugadores);
                     });
         }
     }
@@ -178,11 +200,11 @@ public class CargaPartido {
     }
 
     @SuppressWarnings("SpellCheckingInspection")
-    private void cargarJugadores(Partido partido, Equipo equipo) {
+    private void cargarJugadores(Partido partido, Equipo equipo, List<DetallesJugador> detallesJugadores) {
 
         if (!Hibernate.isInitialized(equipo.getJugadores())) {
             var jugadores = jugadorCache.getJugadores(equipo.getEquipoId(),
-                    partido.getPartidoId());
+                    partido.getPartidoId(), detallesJugadores);
             equipo.setJugadores(jugadores);
         }
     }

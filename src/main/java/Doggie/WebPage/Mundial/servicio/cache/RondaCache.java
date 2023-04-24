@@ -39,7 +39,8 @@ public class RondaCache {
     public List<Partido> getPartidosByFaseId(Long faseId) {
         var partidos = Optional.ofNullable(cache.get(faseId))
                 .orElseThrow(() -> new PartidosNoEncontradosPorGrupoException(faseId));
-        cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES, DetallesPartido.FASE));
+        cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES, DetallesPartido.FASE)
+        , List.of());
         return partidos;
     }
 
@@ -47,7 +48,8 @@ public class RondaCache {
     public List<Partido> getRondaFinal() {
         var partidos = Optional.ofNullable(cache.get(0L))
                 .orElseThrow(() -> new PartidosNoEncontradosPorGrupoException(0L));
-        cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES, DetallesPartido.FASE));
+        cargaPartido.cargar(partidos, List.of(DetallesPartido.EQUIPOS, DetallesPartido.GOLES, DetallesPartido.FASE),
+                List.of());
         return partidos;
     }
 }
